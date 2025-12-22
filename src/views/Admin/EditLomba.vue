@@ -1,17 +1,22 @@
 <script setup>
-import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { ref, watch, onMounted, watchEffect } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import Card from "@/components/Ui/Card.vue";
-import DatePicker from "@/components/Ui/FormInput/DatePicker.vue";
 import { FwbInput, FwbFileInput, FwbSelect, FwbTextarea, FwbButton } from "flowbite-vue";
-import { useInsertlomba, useAllKategori, useAllKabupatenByIdProvinsi, useAllPendidikan, useAllProvinsi, useAllJenis, useAllPembayaran } from "@/composables/tanstack-query/useQuery";
+import { useGetLombaById, useUpdateLomba, useAllKategori, useAllKabupatenByIdProvinsi, useAllPendidikan, useAllProvinsi, useAllJenis, useAllPembayaran } from "@/composables/tanstack-query/useQuery";
 import cookie from "vue-cookies";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 
 const router = useRouter();
+const route = useRoute();
 const token = cookie.get("token");
 const decoded = token ? jwtDecode(token) : null;
+
+/* ===============================
+   GET LOMBA ID FROM ROUTE
+================================ */
+const lombaId = ref(route.params.id);
 
 /* ===============================
    FORM STATE
@@ -32,21 +37,84 @@ const deskripsi = ref("");
 /* ===============================
    FETCH DATA
 ================================ */
+const { data: lombaData, isLoading: isLoadingLomba } = useGetLombaById(lombaId.value);
 const { data: kategoriLomba } = useAllKategori();
 const { data: pendidikan } = useAllPendidikan();
 const { data: provinsi } = useAllProvinsi();
 const { data: jenis } = useAllJenis();
 const { data: pembayaran } = useAllPembayaran();
-const { mutate: insertLomba, isLoading } = useInsertlomba();
+const { mutate: updateLomba, isLoading } = useUpdateLomba();
 
 /* 🔥 KABUPATEN TERGANTUNG PROVINSI */
 const { data: kabupaten, refetch } = useAllKabupatenByIdProvinsi(provinsiId);
 
 /* ===============================
+   TEMP STORAGE UNTUK KABUPATEN ID
+================================ */
+const isInitialLoad = ref(true);
+const savedKabupatenId = ref(null);
+
+/* ===============================
+   AUTO-POPULATE DATA SAAT EDIT
+================================ */
+onMounted(() => {
+    watch(lombaData, (newData) => {
+        if (newData?.data) {
+            const lomba = newData.data;
+            
+            // 1. Set field biasa
+            judulLomba.value = lomba.nama_lomba || "";
+            kategori.value = lomba.id_kategori ? Number(lomba.id_kategori) : "";
+            tingkatPendidikan.value = lomba.id_pendidikan ? Number(lomba.id_pendidikan) : "";
+            jenisLomba.value = lomba.id_jenis ? Number(lomba.id_jenis) : "";
+            deskripsi.value = lomba.deskripsi || "";
+            
+            // 2. Status pembayaran
+            statusPembayaran.value = lomba.id_status_pembayaran ? Number(lomba.id_status_pembayaran) : 1;
+            biayaRegistrasi.value = (lomba.harga && lomba.harga > 0) ? lomba.harga : "";
+            
+            // 3. Provinsi & simpan kabupaten ID (jangan set kabupaten di sini)
+            provinsiId.value = lomba.id_provinsi ? Number(lomba.id_provinsi) : "";
+            savedKabupatenId.value = lomba.id_kabupaten ? Number(lomba.id_kabupaten) : null;
+            
+            // 4. Set tanggal (langsung, tidak perlu nextTick dengan input native)
+            tanggalAcara.value = lomba.tanggal_lomba || "";
+            tanggalBatasPendaftaran.value = lomba.tanggal_batas_pendaftaran || "";
+            
+            console.log('✅ Data dari DB:', {
+                provinsi: lomba.id_provinsi,
+                kabupaten: lomba.id_kabupaten,
+                tanggal_acara: lomba.tanggal_lomba,
+                tanggal_batas: lomba.tanggal_batas_pendaftaran
+            });
+        }
+    }, { immediate: true });
+});
+
+/* ===============================
+   SET KABUPATEN SETELAH DATA LOADED
+================================ */
+watchEffect(() => {
+    // Auto-set kabupaten ketika data kabupaten sudah loaded dan ada savedKabupatenId
+    if (kabupaten.value?.data?.length > 0 && savedKabupatenId.value && isInitialLoad.value) {
+        // Cek apakah kabupaten ID ada di list
+        const kabupatenExists = kabupaten.value.data.find(k => k.value === savedKabupatenId.value);
+        if (kabupatenExists) {
+            kabupatenId.value = savedKabupatenId.value;
+            isInitialLoad.value = false;
+            console.log('✅ Kabupaten ter-set:', savedKabupatenId.value);
+        }
+    }
+});
+
+/* ===============================
    WATCH PROVINSI
 ================================ */
-watch(provinsiId, () => {
-    kabupatenId.value = ""; // reset kabupaten saat provinsi ganti
+watch(provinsiId, (newVal, oldVal) => {
+    // Hanya reset kabupaten jika bukan initial load dan provinsi berubah
+    if (!isInitialLoad.value && newVal !== oldVal && oldVal !== "") {
+        kabupatenId.value = "";
+    }
     refetch();
 });
 
@@ -54,7 +122,7 @@ watch(provinsiId, () => {
    VALIDASI & SUBMIT
 ================================ */
 const submitLomba = async () => {
-    // Validasi field wajib
+    // Validasi field wajib (poster tidak wajib saat edit)
     const fields = [
         { name: "Judul Lomba", value: judulLomba.value },
         { name: "Kategori", value: kategori.value },
@@ -66,7 +134,6 @@ const submitLomba = async () => {
         { name: "Provinsi", value: provinsiId.value },
         { name: "Kabupaten/Kota", value: kabupatenId.value },
         { name: "Deskripsi", value: deskripsi.value },
-        { name: "Poster", value: poster.value },
     ];
 
     for (const field of fields) {
@@ -76,7 +143,7 @@ const submitLomba = async () => {
                 title: "Kolom kosong",
                 text: `Kolom "${field.name}" wajib diisi!`,
             });
-            return; // hentikan submit
+            return;
         }
     }
 
@@ -94,9 +161,9 @@ const submitLomba = async () => {
     const result = await Swal.fire({
         icon: "question",
         title: "Konfirmasi",
-        text: "Apakah Anda yakin ingin submit lomba ini?",
+        text: "Apakah Anda yakin ingin update lomba ini?",
         showCancelButton: true,
-        confirmButtonText: "Ya, submit",
+        confirmButtonText: "Ya, update",
         cancelButtonText: "Batal",
     });
 
@@ -116,15 +183,19 @@ const submitLomba = async () => {
     formData.append("tanggal_batas_pendaftaran", tanggalBatasPendaftaran.value);
     formData.append("deskripsi", deskripsi.value);
     formData.append("harga", statusPembayaran.value === 2 ? Number(biayaRegistrasi.value) : 0);
-    formData.append("image", poster.value);
+    
+    // Hanya append image jika ada file baru
+    if (poster.value) {
+        formData.append("image", poster.value);
+    }
 
-    // Submit pakai TanStack Mutation
-    insertLomba(formData, {
+    // Submit pakai TanStack Mutation untuk Update
+    updateLomba({ id: lombaId.value, data: formData }, {
         onSuccess: () => {
             Swal.fire({
                 icon: "success",
                 title: "Berhasil",
-                text: "Lomba berhasil ditambahkan!",
+                text: "Lomba berhasil diupdate!",
             }).then(() => {
                 router.push("/daftar-upload");
             });
@@ -133,7 +204,7 @@ const submitLomba = async () => {
             Swal.fire({
                 icon: "error",
                 title: "Gagal",
-                text: `Gagal submit lomba: ${error.message || error}`,
+                text: `Gagal update lomba: ${error.message || error}`,
             });
         },
     });
@@ -176,10 +247,20 @@ const submitLomba = async () => {
         <!-- Tanggal -->
         <div class="flex justify-between">
             <div class="w-[45%] mb-5">
-                <DatePicker v-model="tanggalAcara" label="Tanggal Acara" id="tanggalAcara" min-date />
+                <label class="block mb-2 text-sm font-medium text-gray-900">Tanggal Acara</label>
+                <input 
+                    type="date" 
+                    v-model="tanggalAcara"
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                />
             </div>
             <div class="w-[45%] mb-5">
-                <DatePicker v-model="tanggalBatasPendaftaran" label="Tanggal Batas Pendaftaran" id="tanggalBatasPendaftaran" min-date />
+                <label class="block mb-2 text-sm font-medium text-gray-900">Tanggal Batas Pendaftaran</label>
+                <input 
+                    type="date" 
+                    v-model="tanggalBatasPendaftaran"
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                />
             </div>
         </div>
 
@@ -193,12 +274,14 @@ const submitLomba = async () => {
             </div>
         </div>
 
-        <FwbFileInput v-model="poster" label="Unggah Poster Lomba" dropzone class="bg-white mb-5" />
+        <FwbFileInput v-model="poster" label="Unggah Poster Lomba (Opsional - Kosongkan jika tidak ingin mengubah)" dropzone class="bg-white mb-5" />
 
         <FwbTextarea v-model="deskripsi" label="Deskripsi Lomba" class="bg-white h-48 mb-5" placeholder="Jelaskan detail lomba, tema, tujuan dan mekanisme" />
 
-        <div class="flex justify-end">
-            <FwbButton :loading="isLoading" class="bg-brand-500 hover:bg-brand-600" @click="submitLomba"> Submit </FwbButton>
+        <div class="flex justify-center">
+            <div class="w-[100%]">
+                <FwbButton :loading="isLoading || isLoadingLomba" class="bg-brand-500 hover:bg-brand-600 w-full" @click="submitLomba"> Update Lomba </FwbButton>
+            </div>
         </div>
     </Card>
 </template>

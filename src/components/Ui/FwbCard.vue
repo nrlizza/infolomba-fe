@@ -1,5 +1,8 @@
 <script setup>
 import { FwbButton, FwbCard } from 'flowbite-vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 defineProps({
     lomba: {
@@ -14,6 +17,10 @@ const formatRupiah = (value) => {
         currency: 'IDR',
         minimumFractionDigits: 0
     }).format(value)
+}
+
+const handleDetail = (lomba) => {
+    router.push('/detail-lomba/' + lomba.id_lomba)
 }
 
 </script>
@@ -89,8 +96,8 @@ const formatRupiah = (value) => {
                 </div>
 
                 <div class="mt-5 ml-0 flex items-center gap-4">
-                    <FwbButton class="w-full">
-                        Detail Lomba
+                    <FwbButton class="w-full" @click="handleDetail(lomba)">
+                        📑DETAIL LOMBA
                     </FwbButton>
                 </div>
             </div>

@@ -15,8 +15,8 @@ const token = cookie?.get('token');
 const decoded = token ? jwtDecode(token) : null;
 
 const menuItems = [
-    { href: "#", icon: UserCircleIcon, text: "Edit profile" },
-    { href: decoded?.role.toUpperCase() === 'BD' || decoded?.role.toUpperCase() === 'MANAGER OPERASIONAL' ? '/settings' : '#', icon: SettingsIcon, text: "Account settings" },
+    { href: "/beranda", icon: UserCircleIcon, text: "Beranda" },
+    { href: "#", icon: SettingsIcon, text: "Settings" },
     { href: "#", icon: InfoCircleIcon, text: "Support" },
 ];
 

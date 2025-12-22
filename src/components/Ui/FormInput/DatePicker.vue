@@ -1,6 +1,6 @@
 <script setup>
 import { Datepicker } from 'flowbite'
-import { defineProps, defineEmits, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps({
   modelValue: String,
@@ -14,10 +14,6 @@ const props = defineProps({
     default: true
   },
   minDate: {
-    type: Boolean,
-    default: false
-  },
-  maxDate: {
     type: Boolean,
     default: false
   },
@@ -53,8 +49,7 @@ onMounted(() => {
     todayBtn: true,
     clearBtn: true,
     autoSelectToday: props.autoSelectToday,
-    minDate: props.minDate ? today : null,
-    maxDate: props.maxDate ? today : null,
+    minDate: props.minDate ? today : null
   })
 
   // Update modelValue on change

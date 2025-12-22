@@ -23,7 +23,7 @@ const goToInfoLomba = () => {
 <template>
   <div>
     <!-- =================== HERO SECTION =================== -->
-    <section class=" h-[650px] flex items-center text-white px-16" :style="{
+    <section class=" min-h-[75vh] flex items-center text-white px-16" :style="{
       backgroundImage: `url(${bg})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center'
@@ -31,7 +31,7 @@ const goToInfoLomba = () => {
       <div class="flex items-center w-full justify-between gap-10 pb">
 
         <!-- TEXT -->
-        <div class="max-w-xl space-y-4">
+        <div class="max-w-xl space-y-10">
           <h1 class="text-5xl font-extrabold leading-tight">
             Temukan dan Ikuti <br />
             Lomba Sesuai <br />
@@ -61,7 +61,7 @@ const goToInfoLomba = () => {
     <!-- =================== LOMBA TERBARU =================== -->
     <section class="bg-white py-12 lg:py-16 text-center">
       <h2 class="text-3xl lg:text-4xl font-extrabold text-[#4954DE] tracking-wide">
-        Lomba Terbaru
+        LOMBA TERBARU
       </h2>
 
       <p class="text-base lg:text-lg text-[#4954DE] mt-2">

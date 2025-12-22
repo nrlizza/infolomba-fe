@@ -19,7 +19,10 @@ import {
   faCalendar, 
   faPhone, 
   faBuilding,
-  faRightToBracket
+  faRightToBracket,
+  faCircleExclamation,
+  faPenToSquare,
+  faTrash
 } from '@fortawesome/free-solid-svg-icons'
 
 // Sweetalert
@@ -41,7 +44,10 @@ library.add(
   faCalendar, 
   faPhone, 
   faBuilding,
-  faRightToBracket
+  faRightToBracket,
+  faCircleExclamation,
+  faPenToSquare,
+  faTrash
 )
 
 const queryClient = new QueryClient()

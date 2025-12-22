@@ -72,10 +72,17 @@ const endTransition = (el) => {
     >
         <!-- Logo -->
         <div :class="['py-5 flex', !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start']">
-            <router-link to="/daftar-spk">
+            <router-link to="/beranda">
                 <div class="flex items-center gap-5">
-                    <img class="rounded-full" src="/logo.svg" alt="Logo" width="80" height="80" />
-                    <!-- <h1 class="text-lg font-semibold" v-if="isExpanded">Qhome Teknisi</h1> -->
+                    <!-- <img class="rounded-full" src="/logo.svg" alt="Logo" width="80" height="80" /> -->
+                    <div v-if="isExpanded" class="text-2xl font-extrabold">
+                        <span class="text-blue-800">ED</span>
+                        <span class="text-cyan-400">VENT</span>
+                    </div>
+                    <div v-if="!isExpanded" class="text-2xl font-extrabold">
+                        <span class="text-blue-800">E</span>
+                        <span class="text-cyan-400">V</span>
+                    </div>
                 </div>
             </router-link>
         </div>
