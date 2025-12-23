@@ -20,9 +20,9 @@ export const dashboard = [
     component: () => import("@/views/info-lomba/InfoLomba.vue"),
   },
   {
-    path: "/riwayat-user",
-    name: "Riwayat User",
-    component: () => import("@/views/riwayat-user/RiwayatUser.vue"),
+    path: "/riwayat-lomba",
+    name: "Riwayat Lomba",
+    component: () => import("@/views/riwayat-user/RiwayatLomba.vue"),
   },
   {
     path: "/poin-lomba",

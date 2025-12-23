@@ -367,3 +367,24 @@ export function useUserProfile() {
         retry: 0,
     });
 }
+
+export function useAllLombaPeserta(payload) {
+    return useQuery({
+        queryKey: computed(() => ["riwayat-lomba-by-id-user", payload.value.id_user, payload.value.page, payload.value.limit]),
+        queryFn: async () => {
+            const { page, limit, id_user } = payload.value;
+
+            const res = await AxiosInstance.get("riwayat-lomba", {
+                params: { id_user, page, limit },
+            });
+
+            return {
+                data: res.data?.data ?? [],
+                pagination: res.data?.pagination ?? {},
+            };
+        },
+        enabled: computed(() => !!payload.value.id_user),
+        keepPreviousData: true,
+        staleTime: 1000 * 60 * 5,
+    });
+}

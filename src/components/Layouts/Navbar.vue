@@ -51,7 +51,7 @@ const navigateTo = (path) => {
           Info Lomba
         </fwb-navbar-link>
 
-        <fwb-navbar-link :is-active="isActive('/riwayat-user')" link="/riwayat-user">
+        <fwb-navbar-link :is-active="isActive('/riwayat-lomba')" link="/riwayat-lomba">
           Riwayat
         </fwb-navbar-link>
 

@@ -29,8 +29,9 @@ const handlePay = async () => {
     try {
         loading.value = true;
 
+        // CEK SUDAH DAFTAR ATAU BELUM
         const cekLomba = await AxiosInstance.get(
-            "http://localhost:3001/api/payment/history",
+            "https://infolomba-be.vercel.app/api/payment/history",
             {
                 params: {
                     id_lomba,
@@ -39,82 +40,84 @@ const handlePay = async () => {
             }
         );
 
-        if (cekLomba?.data?.data) {
-            Swal.fire({
-                icon: "error",
-                title: "Gagal Daftar",
-                text: "Anda sudah terdaftar di lomba ini.",
-                confirmButtonText: "OK",
-            });
-            loading.value = false;
+        if (cekLomba?.data?.data?.length > 0) {
+            Swal.fire("Gagal", "Anda sudah terdaftar di lomba ini", "error");
             return;
         }
 
-        const res = await AxiosInstance.post(
-            "http://localhost:3001/api/payment/create",
-            {
-                id_user: decoded?.id,
-                id_lomba,
-                name: decoded?.name,
-                email: decoded?.email || "peserta@gmail.com",
-            }
-        );
+        const condition = decoded?.poin >= 100 && lomba.value?.harga > 0;
 
-        // 🔥 CASE GRATIS
-        if (res.data.free) {
-            Swal.fire({
-                icon: "success",
-                title: "Berhasil Daftar 🎉",
-                text: "Lomba ini gratis, kamu sudah terdaftar.",
-                confirmButtonText: "OK",
-            });
-            return;
-        }
-
-        // 💰 CASE BERBAYAR
-        const snapToken = res.data.snapToken;
-
-        window.snap.pay(snapToken, {
-            onSuccess: () => {
-                Swal.fire({
-                    icon: "success",
-                    title: "Pembayaran Berhasil",
-                    text: "Pembayaran berhasil diproses.",
-                    confirmButtonText: "OK",
-                });
-            },
-            onPending: () => {
-                Swal.fire({
-                    icon: "info",
-                    title: "Menunggu Pembayaran",
-                    text: "Silakan selesaikan pembayaran.",
-                    confirmButtonText: "OK",
-                });
-            },
-            onError: () => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Pembayaran Gagal",
-                    text: "Terjadi kesalahan saat proses pembayaran.",
-                    confirmButtonText: "OK",
-                });
-            },
-            onClose: () => {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Pembayaran Dibatalkan",
-                    text: "Popup pembayaran ditutup.",
-                    confirmButtonText: "OK",
-                });
-            },
+        // PILIH METODE
+        const result = await Swal.fire({
+            title: "Pilih Metode Pembayaran",
+            text: condition ? "Gunakan poin atau bayar sekarang?" : "Bayar sekarang?",
+            icon: "question",
+            showDenyButton: condition,
+            confirmButtonText: "💳 Bayar Sekarang",
+            denyButtonText: "🎁 Redeem 100 Poin",
+            cancelButtonText: "Batal",
+            showCancelButton: true,
         });
+
+        // ❌ BATAL
+        if (result.isDismissed) return;
+
+        // 🎁 REDEEM POINT
+        if (result.isDenied) {
+            const res = await AxiosInstance.post(
+                "https://infolomba-be.vercel.app/api/payment/redeem",
+                {
+                    id_user: decoded?.id,
+                    id_lomba,
+                }
+            );
+
+            Swal.fire(
+                "Berhasil 🎉",
+                "Pendaftaran berhasil menggunakan poin",
+                "success"
+            );
+            return;
+        }
+
+        // 💳 MIDTRANS
+        if (result.isConfirmed) {
+            const res = await AxiosInstance.post(
+                "https://infolomba-be.vercel.app/api/payment/create",
+                {
+                    id_user: decoded?.id,
+                    id_lomba,
+                    name: decoded?.name,
+                    email: decoded?.email,
+                }
+            );
+
+            // GRATIS
+            if (res.data.free) {
+                Swal.fire("Berhasil 🎉", "Lomba ini gratis", "success");
+                return;
+            }
+
+            // BERBAYAR
+            window.snap.pay(res.data.snapToken, {
+                onSuccess: () =>
+                    Swal.fire("Sukses", "Pembayaran berhasil", "success"),
+                onPending: () =>
+                    Swal.fire("Pending", "Menunggu pembayaran", "info"),
+                onError: () =>
+                    Swal.fire("Gagal", "Pembayaran gagal", "error"),
+                onClose: () =>
+                    Swal.fire("Dibatalkan", "Pembayaran dibatalkan", "warning"),
+            });
+        }
     } catch (err) {
         console.error(err);
-        Swal.fire("Error", "Terjadi kesalahan saat daftar lomba", "error");
+        Swal.fire("Error", "Terjadi kesalahan", "error");
     } finally {
         loading.value = false;
     }
 };
+
 </script>
 
 <template>
@@ -171,7 +174,8 @@ const handlePay = async () => {
                 </p>
             </div>
 
-            <FwbButton class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-lg" :disabled="loading" @click="handlePay">
+            <FwbButton class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-lg"
+                :disabled="loading" @click="handlePay">
                 {{ loading ? "Memproses..." : "📝 DAFTAR SEKARANG" }}
             </FwbButton>
         </Card>
