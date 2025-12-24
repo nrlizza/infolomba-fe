@@ -14,7 +14,7 @@ const isDropdownOpen = ref(false)
 
 const token = cookie.get('token')
 const decoded = token ? jwtDecode(token) : null
-
+console.log("Get token", token)
 const logout = () => {
   cookie.remove('token')
   router.push('/login')
