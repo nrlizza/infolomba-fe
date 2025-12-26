@@ -47,7 +47,7 @@ const goToInfoLomba = () => {
           <button @click="goToInfoLomba"
             class="flex items-center gap-3 bg-white text-[#4657B5] px-6 py-3 rounded-full font-semibold shadow-md hover:shadow-lg transition">
             <span class="text-lg">🔍</span>
-            Jelajahi Lomba
+            JELAJAHI LOMBA
           </button>
         </div>
 

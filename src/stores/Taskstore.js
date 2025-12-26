@@ -16,6 +16,7 @@ export const useTaskStore = defineStore("taskstore", {
                 const res = await AxiosInstance.post(`auth/login`, payload, {
                     withCredentials: true,
                 });
+                cookie.set('token', res.data.token, '1h');
                 return res.status;
             } catch (error) {
                 console.error("Error logging in:", error);
