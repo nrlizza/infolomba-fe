@@ -81,12 +81,7 @@ onMounted(() => {
             tanggalAcara.value = lomba.tanggal_lomba || "";
             tanggalBatasPendaftaran.value = lomba.tanggal_batas_pendaftaran || "";
             
-            console.log('✅ Data dari DB:', {
-                provinsi: lomba.id_provinsi,
-                kabupaten: lomba.id_kabupaten,
-                tanggal_acara: lomba.tanggal_lomba,
-                tanggal_batas: lomba.tanggal_batas_pendaftaran
-            });
+            
         }
     }, { immediate: true });
 });
@@ -102,7 +97,7 @@ watchEffect(() => {
         if (kabupatenExists) {
             kabupatenId.value = savedKabupatenId.value;
             isInitialLoad.value = false;
-            console.log('✅ Kabupaten ter-set:', savedKabupatenId.value);
+            
         }
     }
 });

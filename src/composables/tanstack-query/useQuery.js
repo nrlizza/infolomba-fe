@@ -322,7 +322,7 @@ export function useAllRiwayatLomba(page = 1, limit = 100, filters = {}) {
             // Gunakan endpoint yang sudah ada: /riwayat-lomba/all
             const res = await AxiosInstance.get(`riwayat-lomba/all?${params.toString()}`);
 
-            console.log("Response dari /riwayat/all:", res.data);
+            
 
             // Handle berbagai format response
             if (res.data && (res.data.ok === true || res.data.data)) {
