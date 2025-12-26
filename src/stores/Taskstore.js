@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import AxiosInstance from "@/lib/axios/axiosInstance.js";
+import cookie from 'vue-cookies';
 
 export const useTaskStore = defineStore("taskstore", {
     state: () => ({
