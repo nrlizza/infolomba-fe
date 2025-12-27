@@ -3,19 +3,19 @@ import { useRoute, useRouter } from "vue-router";
 import AxiosInstance from "@/lib/axios/axiosInstance";
 import { useDetailLomba } from "@/composables/tanstack-query/useQuery";
 import Card from "@/components/Ui/Card.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { FwbButton } from "flowbite-vue";
-import cookie from "vue-cookies";
-import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
+import { useUserProfile } from '@/composables/tanstack-query/useQuery'
 
 const route = useRoute();
 const router = useRouter();
 
-const token = cookie?.get("token");
-const decoded = token ? jwtDecode(token) : null;
-
 const loading = ref(false);
+
+// Fetch user profile dengan poin dari database
+const { data } = useUserProfile()
+const userData = computed(() => data?.value);
 
 const id_lomba = route.params.id_lomba;
 const { data: lomba } = useDetailLomba(id_lomba);
@@ -35,7 +35,7 @@ const handlePay = async () => {
             {
                 params: {
                     id_lomba,
-                    id_user: decoded?.id
+                    id_user: userData.value?.id_user
                 },
             }
         );
@@ -45,7 +45,7 @@ const handlePay = async () => {
             return;
         }
 
-        const condition = decoded?.poin >= 100 && lomba.value?.harga > 0;
+        const condition = userData.value?.poin >= 100 && lomba.value?.harga > 0;
 
         // PILIH METODE
         const result = await Swal.fire({
@@ -67,7 +67,7 @@ const handlePay = async () => {
             const res = await AxiosInstance.post(
                 "https://infolomba-be.vercel.app/api/payment/redeem",
                 {
-                    id_user: decoded?.id,
+                    id_user: userData.value?.id_user,
                     id_lomba,
                 }
             );
@@ -85,10 +85,10 @@ const handlePay = async () => {
             const res = await AxiosInstance.post(
                 "https://infolomba-be.vercel.app/api/payment/create",
                 {
-                    id_user: decoded?.id,
+                    id_user: userData.value?.id_user,
                     id_lomba,
-                    name: decoded?.name,
-                    email: decoded?.email,
+                    name: userData.value?.name,
+                    email: userData.value?.email,
                 }
             );
 

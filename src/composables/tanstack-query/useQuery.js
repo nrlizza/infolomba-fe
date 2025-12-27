@@ -315,12 +315,10 @@ export function useAllRiwayatLomba(page = 1, limit = 100, filters = {}) {
 
             // Add filter params if they exist
             const filterValues = filters.value || filters;
-            if (filterValues.id_user) params.append("id_user", filterValues.id_user);
             if (filterValues.id_lomba) params.append("id_lomba", filterValues.id_lomba);
-            if (filterValues.id_pembayaran) params.append("id_pembayaran", filterValues.id_pembayaran);
 
-            // Gunakan endpoint yang sudah ada: /riwayat-lomba/all
-            const res = await AxiosInstance.get(`riwayat-lomba/all?${params.toString()}`);
+            // Gunakan endpoint yang sudah ada: /riwayat-lomba/daftar-peserta
+            const res = await AxiosInstance.get(`riwayat-lomba/daftar-peserta?${params.toString()}`);
 
             
 
