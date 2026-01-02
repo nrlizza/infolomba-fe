@@ -7,6 +7,7 @@ import { Admin } from "../../Menu/Admin";
 import { Peserta } from "../../Menu/Peserta";
 import cookie from "vue-cookies";
 import { jwtDecode } from "jwt-decode";
+import Navbar from '@/assets/Navbar.svg'
 
 const token = cookie?.get('token');
 const decoded = token ? jwtDecode(token) : null;
@@ -71,18 +72,11 @@ const endTransition = (el) => {
         ]"
     >
         <!-- Logo -->
-        <div :class="['py-5 flex', !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start']">
+        <div :class="['py-2 flex', !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start']">
             <router-link to="/beranda">
-                <div class="flex items-center gap-5">
+                <div class="flex items-center">
                     <!-- <img class="rounded-full" src="/logo.svg" alt="Logo" width="80" height="80" /> -->
-                    <div v-if="isExpanded" class="text-2xl font-extrabold">
-                        <span class="text-blue-800">ED</span>
-                        <span class="text-cyan-400">VENT</span>
-                    </div>
-                    <div v-if="!isExpanded" class="text-2xl font-extrabold">
-                        <span class="text-blue-800">E</span>
-                        <span class="text-cyan-400">V</span>
-                    </div>
+                    <img :src="Navbar" alt="InfoLomba Logo" class="h-14" />
                 </div>
             </router-link>
         </div>

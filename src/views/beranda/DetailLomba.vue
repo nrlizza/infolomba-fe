@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import { useUserProfile } from '@/composables/tanstack-query/useQuery'
 import cookie from 'vue-cookies'
 
-const token = cookie.get('token');
+const token = cookie.get('token');  
 
 const route = useRoute();
 const router = useRouter();

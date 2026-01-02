@@ -23,7 +23,7 @@ const goToInfoLomba = () => {
 <template>
   <div>
     <!-- =================== HERO SECTION =================== -->
-    <section class=" min-h-[75vh] flex items-center text-white px-16" :style="{
+    <section class=" min-h-[75vh] flex items-center text-white px-13" :style="{
       backgroundImage: `url(${bg})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center'

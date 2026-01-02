@@ -1,13 +1,13 @@
 <script setup>
 import { FwbFooter, FwbFooterCopyright } from "flowbite-vue";
-import LogoFooter from "@/assets/LogoFooter.svg";
+import footer from "@/assets/footer.svg";
 </script>
 
 <template>
     <fwb-footer footer-type="socialmedia" class="bg-[#4954DE] text-white">
         <div class="md:flex md:justify-between md:items-start">
             <!-- Logo di kiri -->
-            <img :src="LogoFooter" alt="InfoLomba Logo" class="h-15" />
+            <img :src="footer" alt="InfoLomba Logo" class="h-15" />
 
             <!-- Paragraf di kanan -->
             <div class="max-w-[390px] text-white">
@@ -17,8 +17,7 @@ import LogoFooter from "@/assets/LogoFooter.svg";
             </div>
         </div>
 
-
-        <hr class="my-6 border-white sm:mx-auto lg:my-8" />
+        <hr class=" border-white sm:mx-auto lg:my-5" />
 
         <div class="sm:flex sm:items-center sm:justify-between text-white">
             <fwb-footer-copyright by="InfoLomba" href="#" class="text-white" />

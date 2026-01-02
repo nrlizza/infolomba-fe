@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { ref } from 'vue';
 import avatar from '@/assets/avatar.jpg'
 import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon } from "../Icons";
-import LogoEdvent from '@/assets/LogoEdvent.png'
+import Navbar from '@/assets/Navbar.svg'
 
 const route = useRoute()
 const router = useRouter()
@@ -31,10 +31,10 @@ const navigateTo = (path) => {
 </script>
 
 <template>
-  <fwb-navbar class="bg-white border-b border-gray-200 px-4 py-1">
+  <fwb-navbar class="bg-white border-b border-gray-200 py-1 px-5 md:px-5">
     <template #logo>
       <router-link to="/beranda">
-        <img :src="LogoEdvent" alt="InfoLomba Logo" class="h-11" />
+        <img :src="Navbar" alt="InfoLomba Logo" class="h-13" />
       </router-link>
     </template>
 
