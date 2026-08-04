@@ -29,7 +29,11 @@ const handleLogin = async () => {
         });
         
         if (result === 200) {
-            router.push("/beranda");
+            if (form.value.role === 'ADMIN') {
+                router.push("/admin-dashboard");
+            } else {
+                router.push("/beranda");
+            }
         } else {
             alert("Login gagal. Periksa username & password.");
         }
@@ -39,7 +43,7 @@ const handleLogin = async () => {
     }
 };
 
-const roles = ["PANITIA", "PESERTA"];
+const roles = ["ADMIN", "PANITIA", "PESERTA"];
 </script>
 
 <template>
@@ -55,7 +59,7 @@ const roles = ["PANITIA", "PESERTA"];
             </div>
 
             <!-- Role Toggle -->
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-3 gap-2">
                 <fwb-button v-for="r in roles" :key="r" size="sm" :color="form.role === r ? 'blue' : 'light'" class="w-full rounded-md" @click="form.role = r">
                     {{ r }}
                 </fwb-button>

@@ -22,7 +22,9 @@ import {
   faRightToBracket,
   faCircleExclamation,
   faPenToSquare,
-  faTrash
+  faTrash,
+  faCheck,
+  faXmark
 } from '@fortawesome/free-solid-svg-icons'
 
 // Sweetalert
@@ -47,7 +49,9 @@ library.add(
   faRightToBracket,
   faCircleExclamation,
   faPenToSquare,
-  faTrash
+  faTrash,
+  faCheck,
+  faXmark
 )
 
 const queryClient = new QueryClient()

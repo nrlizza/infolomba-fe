@@ -32,7 +32,15 @@ const tanggalAcara = ref("");
 const tanggalBatasPendaftaran = ref("");
 const provinsiId = ref("");
 const kabupatenId = ref("");
+const formatLomba = ref("");
+const linkPanduan = ref("");
 const deskripsi = ref("");
+
+const formatOptions = [
+    { value: 'INDIVIDU', name: 'INDIVIDU' },
+    { value: 'KELOMPOK', name: 'KELOMPOK' },
+    { value: 'KELOMPOK & INDIVIDU', name: 'BEBAS' }
+];
 
 /* ===============================
    FETCH DATA
@@ -68,6 +76,8 @@ onMounted(() => {
             tingkatPendidikan.value = lomba.id_pendidikan ? Number(lomba.id_pendidikan) : "";
             jenisLomba.value = lomba.id_jenis ? Number(lomba.id_jenis) : "";
             deskripsi.value = lomba.deskripsi || "";
+            formatLomba.value = lomba.format_lomba || "";
+            linkPanduan.value = lomba.link_panduan || "";
             
             // 2. Status pembayaran
             statusPembayaran.value = lomba.id_status_pembayaran ? Number(lomba.id_status_pembayaran) : 1;
@@ -124,10 +134,12 @@ const submitLomba = async () => {
         { name: "Tingkat Peserta", value: tingkatPendidikan.value },
         { name: "Jenis Lomba", value: jenisLomba.value },
         { name: "Status Pembayaran", value: statusPembayaran.value },
-        { name: "Tanggal Acara", value: tanggalAcara.value },
-        { name: "Tanggal Batas Pendaftaran", value: tanggalBatasPendaftaran.value },
+        { name: "Pembukaan Daftar Lomba", value: tanggalAcara.value },
+        { name: "Penutupan Pendaftaran", value: tanggalBatasPendaftaran.value },
         { name: "Provinsi", value: provinsiId.value },
         { name: "Kabupaten/Kota", value: kabupatenId.value },
+        { name: "Format Lomba", value: formatLomba.value },
+        { name: "Link Buku Panduan", value: linkPanduan.value },
         { name: "Deskripsi", value: deskripsi.value },
     ];
 
@@ -176,6 +188,8 @@ const submitLomba = async () => {
     formData.append("nama_lomba", judulLomba.value);
     formData.append("tanggal_lomba", tanggalAcara.value);
     formData.append("tanggal_batas_pendaftaran", tanggalBatasPendaftaran.value);
+    formData.append("format_lomba", formatLomba.value);
+    formData.append("link_panduan", linkPanduan.value);
     formData.append("deskripsi", deskripsi.value);
     formData.append("harga", statusPembayaran.value === 2 ? Number(biayaRegistrasi.value) : 0);
     
@@ -242,7 +256,7 @@ const submitLomba = async () => {
         <!-- Tanggal -->
         <div class="flex justify-between">
             <div class="w-[45%] mb-5">
-                <label class="block mb-2 text-sm font-medium text-gray-900">Tanggal Acara</label>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Pembukaan Daftar Lomba</label>
                 <input 
                     type="date" 
                     v-model="tanggalAcara"
@@ -250,7 +264,7 @@ const submitLomba = async () => {
                 />
             </div>
             <div class="w-[45%] mb-5">
-                <label class="block mb-2 text-sm font-medium text-gray-900">Tanggal Batas Pendaftaran</label>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Penutupan Pendaftaran</label>
                 <input 
                     type="date" 
                     v-model="tanggalBatasPendaftaran"
@@ -266,6 +280,16 @@ const submitLomba = async () => {
             </div>
             <div class="w-[45%]">
                 <FwbSelect v-model="kabupatenId" label="Kabupaten/Kota" :options="kabupaten?.data" placeholder="Pilih Kabupaten/Kota" :disabled="!provinsiId" />
+            </div>
+        </div>
+
+        <!-- Format & Link Panduan -->
+        <div class="flex justify-between mb-5">
+            <div class="w-[45%]">
+                <FwbSelect v-model="formatLomba" label="Format Lomba" :options="formatOptions" placeholder="Pilih Format Lomba" />
+            </div>
+            <div class="w-[45%]">
+                <FwbInput v-model="linkPanduan" label="Link Buku Panduan (URL GDrive)" placeholder="https://drive.google.com/..." class="bg-white" />
             </div>
         </div>
 

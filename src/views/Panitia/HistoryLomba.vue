@@ -7,7 +7,7 @@ import Card from '@/components/Ui/Card.vue'
 import Swal from "sweetalert2"
 import cookie from 'vue-cookies'
 import { jwtDecode } from 'jwt-decode'
-import { useAllLombaByIdUser, useDeleteLomba } from '@/composables/tanstack-query/useQuery'
+import { useAllLombaByIdUser } from '@/composables/tanstack-query/useQuery'
 
 // ===== ambil user dari token =====
 const token = cookie.get('token')
@@ -22,7 +22,6 @@ const payload = ref({
 
 // ===== query =====
 const { data, isLoading, } = useAllLombaByIdUser(payload)
-const { mutateAsync: deleteLomba } = useDeleteLomba()
 
 const router = useRouter()
 
@@ -34,34 +33,7 @@ const goToEdit = (id) => {
   router.push(`/edit-lomba/${id}`)
 }
 
-// ===== delete modal =====
-const openDeleteModal = (data) => {
-  Swal.fire({
-    title: 'Apakah Anda yakin?',
-    text: `Data lomba ${data.nama_lomba} ini akan dihapus!`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    confirmButtonText: 'Ya, hapus!',
-    cancelButtonText: 'Batal'
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        // Panggil mutation delete dengan payload
-        await deleteLomba({
-          id_lomba: data.id_lomba,
-          id_user: decoded?.id
-        })
-        
-        // Tampilkan success message
-        Swal.fire('Terhapus!', 'Lomba berhasil dihapus.', 'success')
-      } catch (error) {
-        // Tampilkan error message
-        Swal.fire('Gagal!', error?.response?.data?.message || 'Terjadi kesalahan saat menghapus lomba.', 'error')
-      }
-    }
-  })
-}
+
 
 // ===== pagination helpers =====
 const pagination = computed(() => data.value?.pagination ?? {})
@@ -114,9 +86,20 @@ const prevPage = () => {
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <!-- Left -->
             <div class="flex-1">
-              <h2 class="text-xl font-bold text-white mb-4">
-                {{ lomba.nama_lomba }}
-              </h2>
+              <div class="flex items-center gap-3 mb-4">
+                <h2 class="text-xl font-bold text-white">
+                  {{ lomba.nama_lomba }}
+                </h2>
+                <span v-if="lomba.status_lomba === 'PENDING'" class="bg-yellow-400 text-yellow-900 text-xs font-semibold px-2.5 py-0.5 rounded flex items-center gap-1">
+                  ⏳ Pending
+                </span>
+                <span v-else-if="lomba.status_lomba === 'APPROVED'" class="bg-green-400 text-green-900 text-xs font-semibold px-2.5 py-0.5 rounded flex items-center gap-1">
+                  ✅ Approved
+                </span>
+                <span v-else-if="lomba.status_lomba === 'REJECTED'" class="bg-red-400 text-red-900 text-xs font-semibold px-2.5 py-0.5 rounded flex items-center gap-1">
+                  ❌ Rejected
+                </span>
+              </div>
 
               <!-- Info dengan Ikon -->
               <div class="flex flex-wrap items-center gap-4 mb-4">
@@ -164,13 +147,6 @@ const prevPage = () => {
                   <font-awesome-icon icon="pen-to-square" class="text-white mr-2" />
                 </template>
                 Edit
-              </FwbButton>
-
-              <FwbButton size="lg" class="min-w-[120px] bg-red-600 hover:bg-red-700" @click="openDeleteModal(lomba)">
-                <template #prefix>
-                  <font-awesome-icon icon="trash" class="text-white mr-2" />
-                </template>
-                Delete
               </FwbButton>
             </div>
           </div>

@@ -10,5 +10,10 @@ export const Admin = [
         icon: PresentationChart,
         name: "Daftar Upload",
         path: "/daftar-upload"
+    },
+    {
+        icon: ListIcon, // Using ListIcon or another available icon for chat
+        name: "Chat Admin",
+        path: "/panitia-chat"
     }
 ];

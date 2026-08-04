@@ -14,11 +14,15 @@ const dropdownRef = ref(null);
 const token = cookie?.get('token');
 const decoded = token ? jwtDecode(token) : null;
 
-const menuItems = [
+let menuItems = [
     { href: "/beranda", icon: UserCircleIcon, text: "Beranda" },
     { href: "#", icon: SettingsIcon, text: "Settings" },
     { href: "#", icon: InfoCircleIcon, text: "Support" },
 ];
+
+if (decoded?.role?.toUpperCase() === 'ADMIN') {
+    menuItems = [];
+}
 
 const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value;
@@ -64,7 +68,7 @@ onUnmounted(() => {
         <!-- Dropdown Start -->
         <div v-if="dropdownOpen" class="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark lg:right-0 md:right-0">
 
-            <ul class="flex flex-col gap-1 pt-2 pb-3 border-b border-gray-200 dark:border-gray-800">
+            <ul v-if="menuItems.length > 0" class="flex flex-col gap-1 pt-2 pb-3 border-b border-gray-200 dark:border-gray-800">
                 <li v-for="item in menuItems" :key="item.href">
                     <router-link
                         :to="item.href"

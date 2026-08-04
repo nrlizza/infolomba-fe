@@ -12,6 +12,9 @@ export const dashboard = [
   {
     path: "/detail-lomba/:id_lomba",
     name: "Detail Lomba",
+    meta: {
+      allowedRoles: ["PESERTA", "PANITIA", "ADMIN"]
+    },
     component: () => import("@/views/beranda/DetailLomba.vue"),
   },
   {
@@ -28,5 +31,14 @@ export const dashboard = [
     path: "/poin-lomba",
     name: "PoinLomba",
     component: () => import("@/views/User/PoinLomba.vue"),
+  },
+  {
+    path: "/favorite-lomba",
+    name: "Favorite Lomba",
+    meta: {
+      requiresAuth: true,
+      allowedRoles: ["PESERTA"]
+    },
+    component: () => import("@/views/User/FavoriteLomba.vue"),
   },
 ];

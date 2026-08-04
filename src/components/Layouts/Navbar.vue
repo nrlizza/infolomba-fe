@@ -5,7 +5,7 @@ import cookie from 'vue-cookies'
 import { jwtDecode } from "jwt-decode";
 import { ref } from 'vue';
 import avatar from '@/assets/avatar.jpg'
-import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon } from "../Icons";
+import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon, PresentationChart, ListIcon } from "../Icons";
 import Navbar from '@/assets/Navbar.svg'
 
 const route = useRoute()
@@ -31,7 +31,7 @@ const navigateTo = (path) => {
 </script>
 
 <template>
-  <fwb-navbar class="bg-white border-b border-gray-200 py-1 px-5 md:px-5">
+  <fwb-navbar class="bg-white border-b border-gray-200 py-1 px-5 md:px-5" style="position: relative; z-index: 999;">
     <template #logo>
       <router-link to="/beranda">
         <img :src="Navbar" alt="InfoLomba Logo" class="h-13" />
@@ -41,15 +41,15 @@ const navigateTo = (path) => {
     <template #default="{ isShowMenu }">
       <fwb-navbar-collapse :is-show-menu="isShowMenu">
 
-        <fwb-navbar-link :is-active="isActive('/beranda')" link="/beranda">
+        <fwb-navbar-link v-if="decoded?.role !== 'PANITIA' && decoded?.role !== 'ADMIN'" :is-active="isActive('/beranda')" link="/beranda">
           Beranda
         </fwb-navbar-link>
 
-        <fwb-navbar-link :is-active="isActive('/info-lomba')" link="/info-lomba">
+        <fwb-navbar-link v-if="decoded?.role !== 'PANITIA' && decoded?.role !== 'ADMIN'" :is-active="isActive('/info-lomba')" link="/info-lomba">
           Info Lomba
         </fwb-navbar-link>
 
-        <fwb-navbar-link :is-active="isActive('/riwayat-lomba')" link="/riwayat-lomba">
+        <fwb-navbar-link v-if="decoded?.role !== 'PANITIA' && decoded?.role !== 'ADMIN'" :is-active="isActive('/riwayat-lomba')" link="/riwayat-lomba">
           Riwayat
         </fwb-navbar-link>
 
@@ -75,11 +75,16 @@ const navigateTo = (path) => {
           </span>
 
           <span class="block mr-1 font-medium text-theme-sm">{{ decoded?.name }}</span>
+          <ChevronDownIcon 
+            class="w-4 h-4 ml-1 text-gray-500 transition-transform duration-200" 
+            :class="{ 'rotate-180': isDropdownOpen }" 
+          />
         </button>
 
         <!-- Dropdown -->
         <div v-if="isDropdownOpen"
-          class="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark lg:right-0 md:right-0">
+          class="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark lg:right-0 md:right-0"
+          style="z-index: 9999;">
 
           <ul class="flex flex-col gap-1 pt-2 pb-3 border-b border-gray-200 dark:border-gray-800">
             <li v-if="decoded?.role === 'PANITIA'">
@@ -88,7 +93,19 @@ const navigateTo = (path) => {
                 <!-- SVG icon would go here -->
                 <component :is="UserCircleIcon"
                   class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
-                Dashboard
+                Dashboard Panitia
+              </router-link>
+              <router-link to="/beranda"
+                class="flex items-center gap-3 px-3 py-2 mt-1 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                <component :is="PresentationChart"
+                  class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
+                Beranda Lomba
+              </router-link>
+              <router-link to="/info-lomba"
+                class="flex items-center gap-3 px-3 py-2 mt-1 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                <component :is="ListIcon"
+                  class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
+                Info Lomba
               </router-link>
             </li>
             
@@ -99,6 +116,16 @@ const navigateTo = (path) => {
                 <component :is="UserCircleIcon"
                   class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
                 Poin Lomba
+              </router-link>
+            </li>
+            <li v-if="decoded?.role === 'PESERTA'">
+              <router-link to="/favorite-lomba"
+                class="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+
+                <component :is="InfoCircleIcon"
+                  class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
+
+                Simpan Favorit
               </router-link>
             </li>
           </ul>

@@ -237,8 +237,9 @@ export function useDeleteLomba() {
             return res.data;
         },
         onSuccess: (data, payload) => {
-            // Invalidate query key "lomba by-user" biar auto refresh
+            // Invalidate query key "lomba by-user" dan "all-lomba-admin" biar auto refresh
             queryClient.invalidateQueries({ queryKey: ["lomba-by-id-user", payload.id_user] });
+            queryClient.invalidateQueries({ queryKey: ["all-lomba-admin"] });
         },
         onError: (error) => {
             console.error("Error delete lomba:", error);
@@ -384,5 +385,64 @@ export function useAllLombaPeserta(payload) {
         enabled: computed(() => !!payload.value.id_user),
         keepPreviousData: true,
         staleTime: 1000 * 60 * 5,
+    });
+}
+
+export function useAllLombaAdmin(page = 1, limit = 10, status = '') {
+    return useQuery({
+        queryKey: computed(() => {
+            const pageValue = page.value || page;
+            const limitValue = limit.value || limit;
+            const statusValue = status.value || status;
+            return ["all-lomba-admin", pageValue, limitValue, statusValue];
+        }),
+        queryFn: async () => {
+            const params = {
+                page: page.value || page,
+                limit: limit.value || limit,
+            };
+            if (status.value || status) {
+                params.status_lomba = status.value || status;
+            }
+
+            const res = await AxiosInstance.get(`lomba/admin/all`, { params });
+
+            return {
+                data: res.data?.data ?? [],
+                pagination: res.data?.pagination ?? {},
+            };
+        },
+        keepPreviousData: true,
+        staleTime: 1000 * 60 * 5,
+    });
+}
+
+export function useLombaStats() {
+    return useQuery({
+        queryKey: ["lomba-stats-admin"],
+        queryFn: async () => {
+            const res = await AxiosInstance.get("lomba/admin/stats");
+            return res.data?.data ?? { total_pending: 0, total_approved: 0, total_rejected: 0 };
+        },
+        staleTime: 1000 * 60 * 5,
+    });
+}
+
+export function useApproveLomba() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id_lomba, status_lomba, alasan_penolakan }) => {
+            const res = await AxiosInstance.put(`lomba/status/${id_lomba}`, {
+                status_lomba,
+                alasan_penolakan
+            });
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["all-lomba-admin"] });
+            queryClient.invalidateQueries({ queryKey: ["lomba-stats-admin"] });
+            queryClient.invalidateQueries({ queryKey: ["all-lomba"] });
+        },
     });
 }

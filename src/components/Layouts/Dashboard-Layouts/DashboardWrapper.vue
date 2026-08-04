@@ -1,12 +1,12 @@
 <script setup>
 import SidebarProvider from "./SidebarProvider.vue";
-import AdminLayout from "./AdminLayout.vue";
+import DashboardLayout from "./DashboardLayout.vue";
 </script>
 
 <template>
   <SidebarProvider>
-    <AdminLayout>
+    <DashboardLayout>
       <slot />
-    </AdminLayout>
+    </DashboardLayout>
   </SidebarProvider>
 </template>

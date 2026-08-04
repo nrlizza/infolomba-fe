@@ -27,7 +27,15 @@ const tanggalAcara = ref("");
 const tanggalBatasPendaftaran = ref("");
 const provinsiId = ref("");
 const kabupatenId = ref("");
+const formatLomba = ref("");
+const linkPanduan = ref("");
 const deskripsi = ref("");
+
+const formatOptions = [
+    { value: 'INDIVIDU', name: 'INDIVIDU' },
+    { value: 'KELOMPOK', name: 'KELOMPOK' },
+    { value: 'KELOMPOK & INDIVIDU', name: 'BEBAS' }
+];
 
 /* ===============================
    FETCH DATA
@@ -61,10 +69,12 @@ const submitLomba = async () => {
         { name: "Tingkat Peserta", value: tingkatPendidikan.value },
         { name: "Jenis Lomba", value: jenisLomba.value },
         { name: "Status Pembayaran", value: statusPembayaran.value },
-        { name: "Tanggal Acara", value: tanggalAcara.value },
-        { name: "Tanggal Batas Pendaftaran", value: tanggalBatasPendaftaran.value },
+        { name: "Pembukaan Daftar Lomba", value: tanggalAcara.value },
+        { name: "Penutupan Pendaftaran", value: tanggalBatasPendaftaran.value },
         { name: "Provinsi", value: provinsiId.value },
         { name: "Kabupaten/Kota", value: kabupatenId.value },
+        { name: "Format Lomba", value: formatLomba.value },
+        { name: "Link Buku Panduan", value: linkPanduan.value },
         { name: "Deskripsi", value: deskripsi.value },
         { name: "Poster", value: poster.value },
     ];
@@ -114,6 +124,8 @@ const submitLomba = async () => {
     formData.append("nama_lomba", judulLomba.value);
     formData.append("tanggal_lomba", tanggalAcara.value);
     formData.append("tanggal_batas_pendaftaran", tanggalBatasPendaftaran.value);
+    formData.append("format_lomba", formatLomba.value);
+    formData.append("link_panduan", linkPanduan.value);
     formData.append("deskripsi", deskripsi.value);
     formData.append("harga", statusPembayaran.value === 2 ? Number(biayaRegistrasi.value) : 0);
     formData.append("image", poster.value);
@@ -176,10 +188,10 @@ const submitLomba = async () => {
         <!-- Tanggal -->
         <div class="flex justify-between">
             <div class="w-[45%] mb-5">
-                <DatePicker v-model="tanggalAcara" label="Tanggal Acara" id="tanggalAcara" min-date />
+                <DatePicker v-model="tanggalAcara" label="Pembukaan Daftar Lomba" id="tanggalAcara" min-date />
             </div>
             <div class="w-[45%] mb-5">
-                <DatePicker v-model="tanggalBatasPendaftaran" label="Tanggal Batas Pendaftaran" id="tanggalBatasPendaftaran" min-date />
+                <DatePicker v-model="tanggalBatasPendaftaran" label="Penutupan Pendaftaran" id="tanggalBatasPendaftaran" min-date />
             </div>
         </div>
 
@@ -190,6 +202,16 @@ const submitLomba = async () => {
             </div>
             <div class="w-[45%]">
                 <FwbSelect v-model="kabupatenId" label="Kabupaten/Kota" :options="kabupaten?.data" placeholder="Pilih Kabupaten/Kota" :disabled="!provinsiId" />
+            </div>
+        </div>
+
+        <!-- Format & Link Panduan -->
+        <div class="flex justify-between mb-5">
+            <div class="w-[45%]">
+                <FwbSelect v-model="formatLomba" label="Format Lomba" :options="formatOptions" placeholder="Pilih Format Lomba" />
+            </div>
+            <div class="w-[45%]">
+                <FwbInput v-model="linkPanduan" label="Link Buku Panduan (URL GDrive)" placeholder="https://drive.google.com/..." class="bg-white" />
             </div>
         </div>
 

@@ -1,15 +1,71 @@
 <script setup>
+import { ref, computed } from 'vue'
 import { FwbButton, FwbCard } from 'flowbite-vue'
 import { useRouter } from 'vue-router'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
+import AxiosInstance from '@/lib/axios/axiosInstance'
+import cookie from 'vue-cookies'
 
 const router = useRouter()
+const queryClient = useQueryClient()
+const token = cookie.get('token')
 
-defineProps({
+const props = defineProps({
     lomba: {
         type: Object,
         required: true
     }
 })
+
+const { data: favoriteIds } = useQuery({
+    queryKey: ['favoriteIds'],
+    queryFn: async () => {
+        if (!token) return []
+        const res = await AxiosInstance.get('/favorite/ids')
+        return res.data.data
+    },
+    enabled: !!token
+})
+
+const isFavorited = computed(() => {
+    return favoriteIds.value?.includes(props.lomba.id_lomba) || false
+})
+
+const toggleFavoriteMutation = useMutation({
+    mutationFn: async (id_lomba) => {
+        const res = await AxiosInstance.post('/favorite/toggle', { id_lomba })
+        return res.data
+    },
+    onMutate: async (id_lomba) => {
+        // Optimistic update
+        await queryClient.cancelQueries({ queryKey: ['favoriteIds'] })
+        const previousFavorites = queryClient.getQueryData(['favoriteIds'])
+        
+        queryClient.setQueryData(['favoriteIds'], (old) => {
+            if (!old) return [id_lomba]
+            return old.includes(id_lomba) 
+                ? old.filter(id => id !== id_lomba)
+                : [...old, id_lomba]
+        })
+        
+        return { previousFavorites }
+    },
+    onError: (err, id_lomba, context) => {
+        queryClient.setQueryData(['favoriteIds'], context.previousFavorites)
+    },
+    onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ['favoriteIds'] })
+        queryClient.invalidateQueries({ queryKey: ['favoriteLombas'] })
+    }
+})
+
+const handleToggleFavorite = () => {
+    if (!token) {
+        router.push('/login')
+        return
+    }
+    toggleFavoriteMutation.mutate(props.lomba.id_lomba)
+}
 
 const formatRupiah = (value) => {
     return new Intl.NumberFormat('id-ID', {
@@ -26,8 +82,21 @@ const handleDetail = (lomba) => {
 </script>
 
 <template>
-    <FwbCard class="w-md">
-        <div class="flex h-full">
+    <FwbCard class="w-md relative overflow-hidden group">
+        <div class="flex h-full relative">
+            <!-- PITA FAVORIT -->
+            <button @click="handleToggleFavorite" 
+                    class="absolute -top-1 right-3 z-10 w-7 h-10 flex items-start justify-center transition-transform transform hover:scale-105 hover:-translate-y-1 drop-shadow-md">
+                <!-- SVG Hollow (Belum Favorit) -->
+                <svg v-if="!isFavorited" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-10 text-gray-800 drop-shadow">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                </svg>
+                <!-- SVG Solid Hitam (Sudah Favorit) -->
+                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-10 text-black drop-shadow-lg">
+                    <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+
             <!-- GAMBAR KIRI -->
             <img :src="lomba.image_url" alt="poster lomba" class="w-45 h-58 object-cover rounded-l-lg" />
 
@@ -61,6 +130,9 @@ const handleDetail = (lomba) => {
                         </svg>
                         <p>
                             {{ new Date(lomba.tanggal_lomba).toLocaleDateString('id-ID') }}
+                            <span v-if="lomba.tanggal_batas_pendaftaran">
+                                - {{ new Date(lomba.tanggal_batas_pendaftaran).toLocaleDateString('id-ID') }}
+                            </span>
                         </p>
                     </div>
 

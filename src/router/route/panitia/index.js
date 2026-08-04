@@ -7,7 +7,7 @@ export const panitia = [
       allowedRoles: ['ADMIN', 'PANITIA'],
       layout: "admin"
     },
-    component: () => import("@/views/Admin/UnggahLomba.vue"),
+    component: () => import("@/views/Panitia/UnggahLomba.vue"),
   },
   {
     path: "/daftar-upload",
@@ -17,7 +17,7 @@ export const panitia = [
       allowedRoles: ['ADMIN', 'PANITIA'],
       layout: "admin"
     },
-    component: () => import("@/views/Admin/HistoryLomba.vue"),
+    component: () => import("@/views/Panitia/HistoryLomba.vue"),
   },
   {
     path: "/edit-lomba/:id",
@@ -27,7 +27,7 @@ export const panitia = [
       allowedRoles: ['ADMIN', 'PANITIA'],
       layout: "admin"
     },
-    component: () => import("@/views/Admin/EditLomba.vue"),
+    component: () => import("@/views/Panitia/EditLomba.vue"),
   },
   {
     path: "/riwayat-daftar-peserta/:id",
@@ -37,6 +37,16 @@ export const panitia = [
       allowedRoles: ['ADMIN', 'PANITIA'],
       layout: "admin"
     },
-    component: () => import("@/views/Admin/DaftarPesertaLomba.vue"),
+    component: () => import("@/views/Panitia/DaftarPesertaLomba.vue"),
+  },
+  {
+    path: "/panitia-chat",
+    name: "Chat Admin",
+    meta: {
+      requiresAuth: true,
+      allowedRoles: ['ADMIN', 'PANITIA'],
+      layout: "admin"
+    },
+    component: () => import("@/views/Panitia/ChatPanitia.vue"),
   },
 ];

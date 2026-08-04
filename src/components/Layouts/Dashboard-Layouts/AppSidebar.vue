@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
-import { ChevronDownIcon, HorizontalDots } from "../../Icons";
+import { ChevronDownIcon, HorizontalDots, PresentationChart } from "../../Icons";
 import { useSidebar } from "../../../composables/useSidebar";
 import { Admin } from "../../Menu/Admin";
 import { Peserta } from "../../Menu/Peserta";
@@ -19,13 +19,31 @@ const { isExpanded, isMobileOpen, openSubmenu } = useSidebar();
 const menuGroups = [
     {
         title: "Menu",
-        items: [
-           ...Admin
-        ],
+        items: [],
     }
 ];
 
-if (decoded?.role.toUpperCase() === 'BD' || decoded?.role.toUpperCase() === 'MANAGER OPERASIONAL') {
+if (decoded?.role?.toUpperCase() === 'ADMIN') {
+    menuGroups[0].items.push({
+        icon: PresentationChart,
+        name: "Dashboard",
+        path: "/admin-dashboard"
+    },
+    {
+        icon: PresentationChart, // Or another icon if we import one, but PresentationChart is fine
+        name: "Riwayat Validasi",
+        path: "/admin-riwayat"
+    },
+    {
+        icon: PresentationChart,
+        name: "Chat Panitia",
+        path: "/admin-chat"
+    });
+} else if (decoded?.role?.toUpperCase() === 'PANITIA') {
+    menuGroups[0].items.push(...Admin);
+}
+
+if (decoded?.role?.toUpperCase() === 'BD' || decoded?.role?.toUpperCase() === 'MANAGER OPERASIONAL') {
     menuGroups[0].items.push(...Peserta);
 }
 

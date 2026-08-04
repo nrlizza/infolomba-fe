@@ -27,6 +27,14 @@ export async function globalAuthGuard(to, from, next) {
     }
 
     const userRole = user.role.toUpperCase();
+    
+    // Admin hanya boleh mengakses halaman yang secara eksplisit mengizinkan ADMIN
+    if (userRole === 'ADMIN') {
+      if (!allowedRoles || !allowedRoles.includes('ADMIN')) {
+        return next({ path: '/admin-dashboard' });
+      }
+    }
+
     if (allowedRoles && !allowedRoles.includes(userRole)) {
       return next({ name: 'Forbidden' });
     }

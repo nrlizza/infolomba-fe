@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import MainLayout from "@/components/Layouts/MainLayout.vue";
 import EmptyLayout from "@/components/Layouts/EmptyLayout.vue";
-import AdminWrapper from "@/components/Layouts/Admin-Layouts/AdminWrapper.vue";
+import DashboardWrapper from "@/components/Layouts/Dashboard-Layouts/DashboardWrapper.vue";
 
 const route = useRoute();
 
@@ -15,7 +15,7 @@ const layout = computed(() => {
     case "main":
       return MainLayout;
     case "admin":
-      return AdminWrapper;
+      return DashboardWrapper;
     default:
       return MainLayout; // fallback biar aman
   }
