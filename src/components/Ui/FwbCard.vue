@@ -82,97 +82,70 @@ const handleDetail = (lomba) => {
 </script>
 
 <template>
-    <FwbCard class="w-md relative overflow-hidden group">
-        <div class="flex h-full relative">
-            <!-- PITA FAVORIT -->
-            <button @click="handleToggleFavorite" 
-                    class="absolute -top-1 right-3 z-10 w-7 h-10 flex items-start justify-center transition-transform transform hover:scale-105 hover:-translate-y-1 drop-shadow-md">
-                <!-- SVG Hollow (Belum Favorit) -->
-                <svg v-if="!isFavorited" xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-10 text-gray-800 drop-shadow">
+    <div class="group relative bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 overflow-hidden flex">
+        <!-- GAMBAR KIRI -->
+        <div class="relative w-[140px] flex-shrink-0 overflow-hidden">
+            <img :src="lomba.image_url" alt="poster lomba" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+            
+            <!-- FAVORITE BUTTON -->
+            <button @click.stop="handleToggleFavorite" 
+                    class="absolute top-2 right-2 z-10 p-1.5 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-all transform hover:scale-110 active:scale-95">
+                <svg v-if="!isFavorited" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-gray-400">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                 </svg>
-                <!-- SVG Solid Hitam (Sudah Favorit) -->
-                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-10 text-black drop-shadow-lg">
+                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-red-500">
                     <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z" clip-rule="evenodd" />
                 </svg>
             </button>
+        </div>
 
-            <!-- GAMBAR KIRI -->
-            <img :src="lomba.image_url" alt="poster lomba" class="w-45 h-58 object-cover rounded-l-lg" />
+        <!-- KONTEN KANAN -->
+        <div class="flex-1 p-4 flex flex-col min-w-0">
+            <!-- JUDUL -->
+            <h2 class="font-bold text-gray-900 text-sm leading-tight line-clamp-2 mb-3 group-hover:text-[#4954DE] transition-colors">
+                {{ lomba.nama_lomba }}
+            </h2>
 
-            <!-- KONTEN KANAN -->
-            <div class="flex-1 px-6 py-3">
-                <!-- Judul -->
-                <h2 class="font-semibold text-[16px] text-[#4954DE] leading-tight -ml-1 text-left">
-                    {{ lomba.nama_lomba }}
-                </h2>
-
-                <!-- Detail Info -->
-                <div class="mt-4 space-y-2 text-[14px]">
-                    <!-- Kategori -->
-                    <div class="flex items-center gap-3">
-                        <!-- SVG ASLI -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+            <!-- INFO -->
+            <div class="space-y-2 mb-3 flex-grow">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-lg bg-[#4954DE]/10 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-3 h-3 text-[#4954DE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                         </svg>
-                        <p>{{ lomba.kategori_lomba }}</p>
                     </div>
-
-                    <!-- Tanggal -->
-                    <div class="flex items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                        </svg>
-                        <p>
-                            {{ new Date(lomba.tanggal_lomba).toLocaleDateString('id-ID') }}
-                            <span v-if="lomba.tanggal_batas_pendaftaran">
-                                - {{ new Date(lomba.tanggal_batas_pendaftaran).toLocaleDateString('id-ID') }}
-                            </span>
-                        </p>
-                    </div>
-
-                    <!-- Peserta -->
-                    <div class="flex items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-                        </svg>
-                        <p>{{ lomba.tingkat_pendidikan }}</p>
-                    </div>
-
-                    <!-- Pembayaran (static dulu) -->
-                    <div class="flex items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
-                        </svg>
-
-                        <!-- GRATIS -->
-                        <span v-if="lomba.harga === 0"
-                            class="px-2 py-0.5 rounded-md bg-green-100 text-green-700 font-semibold text-xs">
-                            GRATIS
-                        </span>
-
-                        <!-- BERBAYAR -->
-                        <p v-else class="font-medium text-gray-800">
-                            {{ formatRupiah(lomba.harga) }}
-                        </p>
-                    </div>
+                    <span class="text-xs text-gray-600 truncate">{{ lomba.kategori_lomba }}</span>
                 </div>
-
-                <div class="mt-5 ml-0 flex items-center gap-4">
-                    <FwbButton class="w-full" @click="handleDetail(lomba)">
-                        📑DETAIL LOMBA
-                    </FwbButton>
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-lg bg-[#4954DE]/10 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-3 h-3 text-[#4954DE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-600">{{ new Date(lomba.tanggal_lomba).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-lg bg-[#4954DE]/10 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-3 h-3 text-[#4954DE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 01-9-3.824" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-600 truncate">{{ lomba.tingkat_pendidikan }}</span>
                 </div>
             </div>
+
+            <!-- FOOTER -->
+            <div class="flex items-center justify-between gap-3 pt-3 border-t border-gray-100">
+                <div class="flex flex-col min-w-0">
+                    <span v-if="lomba.harga === 0" class="text-green-600 font-bold text-sm">GRATIS</span>
+                    <span v-else class="text-[#4954DE] font-bold text-sm truncate">{{ formatRupiah(lomba.harga) }}</span>
+                </div>
+                <button @click="handleDetail(lomba)" 
+                        class="px-4 py-2 bg-[#4954DE] text-white text-xs font-bold rounded-lg hover:bg-[#3641f5] shadow-sm hover:shadow-md transition-all active:scale-95 flex-shrink-0">
+                    Detail
+                </button>
+            </div>
         </div>
-    </FwbCard>
+    </div>
 </template>
