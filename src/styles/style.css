@@ -339,6 +339,95 @@ html, body, :root {
 }
 
 /* ================================================
+   COMMON ANIMATIONS
+   ================================================ */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out;
+}
+
+.animate-fade-in-scale {
+  animation: fade-in-scale 1.2s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ================================================
+   COMPONENTS CUSTOM STYLES
+   ================================================ */
+
+.modern-select select {
+  border-radius: 0.5rem !important;
+  border-color: #e5e7ec !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.modern-select select:focus {
+  outline: none !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+}
+
+.pagination-custom button {
+  border-radius: 0.5rem !important;
+  margin-left: 0.25rem !important;
+  margin-right: 0.25rem !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.pagination-custom button[aria-current="page"] {
+  background-color: #4f46e5 !important;
+  color: white !important;
+  border-color: #4f46e5 !important;
+}
+
+/* ================================================
    FORCE OVERRIDE FLOWBITE-VUE PAGINATION
    ================================================ */
 

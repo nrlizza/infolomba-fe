@@ -96,7 +96,6 @@ const goToInfoLomba = () => {
 
     <!-- =================== LOMBA TERBARU =================== -->
     <section class="relative bg-slate-50 py-12 lg:py-16 overflow-hidden">
-      <!-- Decorative Background Elements -->
       <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-[#4954DE]/5 rounded-full blur-3xl"></div>
         <div class="absolute top-1/2 -right-24 w-80 h-80 bg-[#FFD277]/10 rounded-full blur-3xl"></div>
@@ -109,7 +108,7 @@ const goToInfoLomba = () => {
               <span class="text-[#4954DE] font-bold text-sm tracking-wider uppercase">Update Terbaru</span>
             </div>
             <h2 class="text-3xl lg:text-4xl font-black text-gray-900 leading-tight">
-              LOMBA <span class="bg-gradient-to-r from-[#4954DE] to-[#7592ff] bg-clip-text text-transparent">TERBARU</span>
+              LOMBA <span class="bg-[#4954DE] bg-clip-text text-transparent">TERBARU</span>
             </h2>
             <p class="text-gray-500 mt-3 text-base max-w-xl">
               Temukan kompetisi terbaru yang sesuai dengan minat dan bakatmu. Ambil kesempatanmu sekarang!
@@ -131,61 +130,3 @@ const goToInfoLomba = () => {
     </section>
   </div>
 </template>
-
-<style scoped>
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-scale {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 1s ease-out;
-}
-
-.animate-fade-in-scale {
-  animation: fade-in-scale 1.2s ease-out;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 3s ease-in-out infinite;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-</style>
