@@ -1,22 +1,32 @@
 <script setup>
-import { useRouter } from 'vue-router'; // Import useRouter dari vue-router
+import { useRouter } from 'vue-router';
+import { useAuth } from '@/composables/useAuth';
 import Card from "@/components/Ui/Card.vue";
 import bg from "@/assets/bg.png";
 import mask from "@/assets/Mask group.svg";
 import { FwbPagination } from 'flowbite-vue'
-import { ref } from 'vue'
-import { useAllLomba } from '@/composables/tanstack-query/useQuery';
+import { ref, computed } from 'vue'
+import { useAllLomba, useUserProfile } from '@/composables/tanstack-query/useQuery';
 import FwbCard from '@/components/Ui/FwbCard.vue';
 
-// Mendapatkan instance router
 const router = useRouter();
+const { getUser } = useAuth();
 const currentPage = ref(1)
 
 const { data, isLoading } = useAllLomba();
+const { data: userProfile, isLoading: isLoadingProfile } = useUserProfile();
+const userRole = computed(() => getUser()?.role?.toUpperCase());
 
-// Fungsi untuk navigasi ke halaman Info Lomba
+const userPoint = computed(() => userProfile.value?.poin || 0);
+const maxPoint = ref(100);
+const progressPercentage = computed(() => (userPoint.value / maxPoint.value) * 100);
+
 const goToInfoLomba = () => {
-  router.push('/info-lomba'); // Arahkan ke halaman /info-lomba
+  router.push('/info-lomba');
+};
+
+const goToPoinLomba = () => {
+  router.push('/poin-lomba');
 };
 </script>
 
@@ -66,6 +76,38 @@ const goToInfoLomba = () => {
               <svg class="relative w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
               </svg>
+            </button>
+
+            <button 
+              v-if="userRole === 'PESERTA' && !isLoadingProfile && userProfile"
+              @click="goToPoinLomba"
+              class="group relative flex items-center gap-3 bg-white backdrop-blur-sm px-6 py-4 rounded-full font-bold text-base shadow-lg hover:shadow-2xl border-2 border-[#FFD277] transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden w-full sm:w-auto"
+            >
+              <div class="relative flex items-center gap-2">
+                <svg class="w-5 h-5 text-[#4954DE] group-hover:rotate-12 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <div class="relative">
+                  <span class="text-[#4954DE] text-base">{{ userPoint }}</span>
+                  <span class="text-gray-400 text-sm">/ {{ maxPoint }}</span>
+                </div>
+                <span class="relative text-sm text-gray-600">Poin</span>
+              </div>
+
+              <div class="relative w-8 h-8 flex items-center justify-center">
+                <svg class="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="16" fill="none" stroke="#f3f4f6" stroke-width="3" />
+                  <circle 
+                    cx="18" cy="18" r="16" 
+                    fill="none" 
+                    stroke="#FFD277" 
+                    stroke-width="3"
+                    :stroke-dasharray="`${progressPercentage} 100`"
+                    class="transition-all duration-700"
+                  />
+                </svg>
+                <span class="absolute text-[10px] font-black text-[#4954DE]">{{ progressPercentage.toFixed(0) }}%</span>
+              </div>
             </button>
           </div>
         </div>
@@ -123,7 +165,7 @@ const goToInfoLomba = () => {
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
           <FwbCard v-for="lomba in data?.data" :key="lomba.nama_lomba" :lomba="lomba" class="animate-fade-in-up" />
         </div>
       </div>

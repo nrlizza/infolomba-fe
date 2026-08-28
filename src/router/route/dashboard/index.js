@@ -30,6 +30,10 @@ export const dashboard = [
   {
     path: "/poin-lomba",
     name: "PoinLomba",
+    meta: {
+      requiresAuth: true,
+      allowedRoles: ["PESERTA"]
+    },
     component: () => import("@/views/User/PoinLomba.vue"),
   },
   {

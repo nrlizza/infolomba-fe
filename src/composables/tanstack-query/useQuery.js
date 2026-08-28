@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
 import { computed } from "vue";
+import cookie from "vue-cookies";
 import AxiosInstance from "@/lib/axios/axiosInstance";
 
 export function useAllLomba(page = 1, limit = 9, filters = {}) {
@@ -363,6 +364,7 @@ export function useUserProfile() {
         },
         staleTime: 0, // selalu fetch fresh data
         cacheTime: 0, // tidak cache data
+        enabled: () => !!cookie.get("token"),
         retry: 0,
     });
 }

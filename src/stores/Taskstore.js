@@ -49,6 +49,8 @@ export const useTaskStore = defineStore("taskstore", {
                 return res.status;
             } catch (error) {
                 console.error("Error logging out:", error);
+            } finally {
+                cookie.remove('token');
             }
         },
 
