@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { FwbButton, FwbInput } from "flowbite-vue";
 import { useTaskStore } from "@/stores/Taskstore";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+const emit = defineEmits(['close', 'switchToRegister']);
 const store = useTaskStore();
 const router = useRouter();
 
@@ -29,6 +30,7 @@ const handleLogin = async () => {
         });
         
         if (result === 200) {
+            emit('close');
             if (form.value.role === 'ADMIN') {
                 router.push("/admin-dashboard");
             } else {
@@ -43,22 +45,51 @@ const handleLogin = async () => {
     }
 };
 
+const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+        emit('close');
+    }
+};
+
+const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+        emit('close');
+    }
+};
+
+const handleSwitchToRegister = () => {
+    emit('switchToRegister');
+};
+
+onMounted(() => {
+    document.addEventListener('keydown', handleEscape);
+    document.body.style.overflow = 'hidden';
+});
+
+onUnmounted(() => {
+    document.removeEventListener('keydown', handleEscape);
+    document.body.style.overflow = '';
+});
+
 const roles = ["ADMIN", "PANITIA", "PESERTA"];
 </script>
 
 <template>
-    <section class="bg-gradient-to-b from-blue-50 to-white min-h-screen flex items-center justify-center px-4">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-6 border border-gray-100 relative">
+    <div 
+        class="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 animate-fade-in"
+        @click="handleBackdropClick"
+    >
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6 border border-gray-100 animate-scale-in relative">
             <button
-                @click="router.push('/beranda')"
-                class="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors group"
+                @click="emit('close')"
+                class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Tutup"
             >
-                <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                <span class="text-sm font-medium">Kembali</span>
             </button>
-            
+
             <div class="text-center space-y-2">
                 <div class="inline-flex items-center justify-center w-14 h-14 bg-blue-600 text-white rounded-xl">
                     <font-awesome-icon icon="trophy" class="text-2xl" />
@@ -67,23 +98,19 @@ const roles = ["ADMIN", "PANITIA", "PESERTA"];
                 <p class="text-sm text-gray-500">Masuk ke akun Anda untuk melanjutkan</p>
             </div>
 
-            <!-- Role Toggle -->
             <div class="grid grid-cols-3 gap-2">
                 <fwb-button v-for="r in roles" :key="r" size="sm" :color="form.role === r ? 'blue' : 'light'" class="w-full rounded-md" @click="form.role = r">
                     {{ r }}
                 </fwb-button>
             </div>
 
-            <!-- Login Form -->
             <form class="space-y-5" @submit.prevent="handleLogin">
-                <!-- Username -->
                 <div class="relative">
                     <label for="username" class="block mb-1 text-sm font-medium text-gray-700"> Username </label>
                     <font-awesome-icon icon="user" class="absolute left-3 top-9 text-gray-400 z-10" />
                     <fwb-input id="username" v-model="form.username" placeholder="Masukkan username" type="text" required class="pl-10" />
                 </div>
 
-                <!-- Password -->
                 <div class="relative">
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1"> Password </label>
                     <font-awesome-icon icon="lock" class="absolute left-3 top-9 text-gray-400 z-10" />
@@ -93,25 +120,52 @@ const roles = ["ADMIN", "PANITIA", "PESERTA"];
                     </button>
                 </div>
 
-                <!-- Submit -->
                 <fwb-button type="submit" color="blue" size="lg" class="w-full flex justify-center items-center gap-2">
                     <font-awesome-icon icon="right-to-bracket" />
                     Masuk
                 </fwb-button>
 
-                <!-- Divider -->
                 <div class="flex items-center gap-3 my-3">
                     <hr class="flex-grow border-gray-200" />
                     <span class="text-xs text-gray-400">atau</span>
                     <hr class="flex-grow border-gray-200" />
                 </div>
 
-                <!-- Register -->
                 <p class="text-sm text-center text-gray-600">
                     Belum punya akun?
-                    <a href="/register" class="text-blue-600 hover:underline font-medium">Daftar sekarang</a>
+                    <button type="button" @click="handleSwitchToRegister" class="text-blue-600 hover:underline font-medium">Daftar sekarang</button>
                 </p>
             </form>
         </div>
-    </section>
+    </div>
 </template>
+
+<style scoped>
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+}
+
+.animate-scale-in {
+    animation: scale-in 0.3s ease-out;
+}
+</style>

@@ -95,7 +95,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="h-[calc(100vh-120px)] flex justify-center bg-transparent">
+    <div class="h-[calc(100vh-120px)] min-h-[480px] flex justify-center bg-transparent">
         <Card class="w-full max-w-3xl flex flex-col h-full bg-white shadow-sm border border-gray-100 p-0 rounded-xl overflow-hidden">
             <!-- Chat Header -->
             <div class="p-4 border-b border-gray-100 flex items-center gap-3 bg-white z-10 shadow-sm">
@@ -132,10 +132,10 @@ onUnmounted(() => {
             </div>
 
             <!-- Input Area -->
-            <div class="p-4 border-t border-gray-100 bg-white flex items-center gap-3">
+            <div class="p-3 sm:p-4 border-t border-gray-100 bg-white flex items-center gap-2 sm:gap-3">
                 <input type="text" v-model="newMessage" @keyup.enter="sendMessage" 
                        placeholder="Tulis pesan ke admin..." 
-                       class="flex-1 bg-gray-50/50 border border-gray-200 rounded-full px-5 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all">
+                       class="min-w-0 flex-1 bg-gray-50/50 border border-gray-200 rounded-full px-4 sm:px-5 py-3 text-sm sm:text-[15px] focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all">
                 <button @click="sendMessage" 
                         class="w-12 h-12 bg-brand-500 hover:bg-brand-600 active:scale-95 transition-all text-white rounded-full flex items-center justify-center shadow-lg shadow-brand-500/30">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 ml-1">

@@ -266,11 +266,11 @@ const handlePay = async () => {
             </Card>
         </div>
 
-        <div v-if="userData?.role !== 'ADMIN'" class="fixed bottom-8 right-8 z-50">
+        <div v-if="userData?.role !== 'ADMIN'" class="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50">
             <FwbButton 
                 @click="handlePay"
                 :disabled="loading || isRegistered"
-                class="group relative bg-gradient-to-r from-[#4954DE] to-[#6366F1] hover:from-[#3944CE] hover:to-[#5356E1] text-white font-bold rounded-full shadow-2xl hover:shadow-[#4954DE]/50 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed w-16 h-16 lg:w-auto lg:h-auto lg:px-8 lg:py-4 flex items-center justify-center lg:rounded-full animate-bounce hover:animate-none hover:scale-110">
+                class="group relative bg-gradient-to-r from-[#4954DE] to-[#6366F1] hover:from-[#3944CE] hover:to-[#5356E1] text-white font-bold rounded-full shadow-2xl hover:shadow-[#4954DE]/50 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed w-14 h-14 sm:w-16 sm:h-16 lg:w-auto lg:h-auto lg:px-8 lg:py-4 flex items-center justify-center lg:rounded-full animate-bounce hover:animate-none hover:scale-110">
                 <span class="lg:inline-flex items-center gap-2.5">
                     <FontAwesomeIcon v-if="isRegistered" :icon="faCheckCircle" class="w-6 h-6 lg:w-5 lg:h-5" />
                     <FontAwesomeIcon v-else :icon="faCreditCard" class="w-6 h-6 lg:w-5 lg:h-5" />

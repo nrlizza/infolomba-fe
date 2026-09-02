@@ -224,38 +224,38 @@ const submitLomba = async () => {
 <template>
     <Card>
         <!-- Judul & Kategori -->
-        <div class="flex justify-between">
-            <div class="w-[45%]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="w-full">
                 <FwbInput v-model="judulLomba" label="Judul Lomba" placeholder="Masukkan Judul Lomba" class="bg-white mb-5" />
             </div>
-            <div class="w-[45%]">
+            <div class="w-full">
                 <FwbSelect v-model="kategori" label="Kategori Lomba" :options="kategoriLomba?.data" placeholder="Pilih Kategori Lomba" />
             </div>
         </div>
 
         <!-- Tingkat & Jenis -->
-        <div class="flex justify-between">
-            <div class="w-[45%] mb-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="w-full mb-5">
                 <FwbSelect v-model="tingkatPendidikan" label="Tingkat Peserta" :options="pendidikan?.data" placeholder="Pilih Tingkat Peserta" />
             </div>
-            <div class="w-[45%] mb-5">
+            <div class="w-full mb-5">
                 <FwbSelect v-model="jenisLomba" label="Jenis Lomba" :options="jenis?.data" placeholder="Pilih Jenis Lomba" />
             </div>
         </div>
 
         <!-- Status Pembayaran & Biaya -->
-        <div class="flex justify-between">
-            <div class="w-[45%] mb-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="w-full mb-5">
                 <FwbSelect v-model="statusPembayaran" label="Status Pembayaran" :options="pembayaran?.data" placeholder="Pilih Status Pembayaran" />
             </div>
-            <div v-if="statusPembayaran === 2" class="w-[45%] mb-5">
+            <div v-if="statusPembayaran === 2" class="w-full mb-5">
                 <FwbInput v-model="biayaRegistrasi" label="Biaya Registrasi" type="number" placeholder="Masukkan Biaya Registrasi" class="bg-white" />
             </div>
         </div>
 
         <!-- Tanggal -->
-        <div class="flex justify-between">
-            <div class="w-[45%] mb-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="w-full mb-5">
                 <label class="block mb-2 text-sm font-medium text-gray-900">Pembukaan Daftar Lomba</label>
                 <input 
                     type="date" 
@@ -263,7 +263,7 @@ const submitLomba = async () => {
                     class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 />
             </div>
-            <div class="w-[45%] mb-5">
+            <div class="w-full mb-5">
                 <label class="block mb-2 text-sm font-medium text-gray-900">Penutupan Pendaftaran</label>
                 <input 
                     type="date" 
@@ -274,21 +274,21 @@ const submitLomba = async () => {
         </div>
 
         <!-- Provinsi & Kabupaten -->
-        <div class="flex justify-between mb-5">
-            <div class="w-[45%]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div class="w-full">
                 <FwbSelect v-model="provinsiId" label="Provinsi" :options="provinsi?.data" placeholder="Pilih Provinsi" />
             </div>
-            <div class="w-[45%]">
+            <div class="w-full">
                 <FwbSelect v-model="kabupatenId" label="Kabupaten/Kota" :options="kabupaten?.data" placeholder="Pilih Kabupaten/Kota" :disabled="!provinsiId" />
             </div>
         </div>
 
         <!-- Format & Link Panduan -->
-        <div class="flex justify-between mb-5">
-            <div class="w-[45%]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div class="w-full">
                 <FwbSelect v-model="formatLomba" label="Format Lomba" :options="formatOptions" placeholder="Pilih Format Lomba" />
             </div>
-            <div class="w-[45%]">
+            <div class="w-full">
                 <FwbInput v-model="linkPanduan" label="Link Buku Panduan (URL GDrive)" placeholder="https://drive.google.com/..." class="bg-white" />
             </div>
         </div>

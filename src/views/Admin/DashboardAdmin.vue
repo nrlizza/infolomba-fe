@@ -145,8 +145,8 @@ const prevPage = () => {
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <!-- Left -->
               <div class="flex-1">
-                <div class="flex items-center gap-3 mb-4">
-                  <h2 class="text-xl font-bold text-white">
+                <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
+                  <h2 class="text-lg sm:text-xl font-bold text-white break-words">
                     {{ lomba.nama_lomba }}
                   </h2>
                   <span v-if="lomba.status_lomba === 'PENDING'" class="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded">PENDING</span>
@@ -173,8 +173,8 @@ const prevPage = () => {
               </div>
 
               <!-- Right Section - Buttons -->
-              <div class="flex flex-wrap gap-3" v-if="lomba.status_lomba === 'PENDING'">
-                <FwbButton size="lg" class="min-w-[120px] bg-blue-500 hover:bg-blue-600"
+              <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto" v-if="lomba.status_lomba === 'PENDING'">
+                <FwbButton size="lg" class="w-full sm:w-auto sm:min-w-[120px] bg-blue-500 hover:bg-blue-600"
                   @click="router.push(`/detail-lomba/${lomba.id_lomba}`)">
                   <template #prefix>
                     <font-awesome-icon icon="eye" class="text-white mr-2" />
@@ -182,7 +182,7 @@ const prevPage = () => {
                   Detail
                 </FwbButton>
 
-                <FwbButton size="lg" class="min-w-[120px] bg-green-500 hover:bg-green-600"
+                <FwbButton size="lg" class="w-full sm:w-auto sm:min-w-[120px] bg-green-500 hover:bg-green-600"
                   @click="openActionModal(lomba, 'APPROVED')">
                   <template #prefix>
                     <font-awesome-icon icon="check" class="text-white mr-2" />
@@ -190,7 +190,7 @@ const prevPage = () => {
                   Setujui
                 </FwbButton>
 
-                <FwbButton size="lg" class="min-w-[120px] bg-red-600 hover:bg-red-700" @click="openActionModal(lomba, 'REJECTED')">
+                <FwbButton size="lg" class="w-full sm:w-auto sm:min-w-[120px] bg-red-600 hover:bg-red-700" @click="openActionModal(lomba, 'REJECTED')">
                   <template #prefix>
                     <font-awesome-icon icon="xmark" class="text-white mr-2" />
                   </template>
@@ -202,7 +202,7 @@ const prevPage = () => {
         </Card>
 
         <!-- Pagination -->
-        <div class="flex justify-between items-center gap-4 mt-6">
+        <div class="flex flex-wrap justify-between items-center gap-3 mt-6">
           <FwbButton size="lg" class="ml-4" :disabled="payload.page === 1" @click="prevPage">
             Prev
           </FwbButton>

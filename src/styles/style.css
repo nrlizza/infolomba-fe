@@ -200,6 +200,24 @@ html, body, :root {
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
+
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+
   button:not(:disabled),
   [role='button']:not(:disabled) {
     cursor: pointer;

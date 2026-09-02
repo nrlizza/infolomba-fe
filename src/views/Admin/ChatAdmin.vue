@@ -112,9 +112,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="h-[calc(100vh-120px)] flex gap-4 bg-gray-50 rounded-xl">
+    <div class="h-[calc(100vh-120px)] min-h-[560px] flex flex-col md:flex-row gap-4 bg-gray-50 rounded-xl">
         <!-- Sidebar Contacts -->
-        <Card class="w-1/3 flex flex-col h-full bg-white shadow-sm border-r border-gray-100 p-0 overflow-hidden">
+        <Card class="w-full md:w-1/3 min-h-[180px] md:min-h-0 flex flex-col h-2/5 md:h-full bg-white shadow-sm border-r border-gray-100 p-0 overflow-hidden">
             <div class="p-4 border-b border-gray-100">
                 <h2 class="text-lg font-semibold text-gray-800">Chat Panitia</h2>
                 <input type="text" placeholder="Search..." class="mt-3 w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow">
@@ -136,7 +136,7 @@ onUnmounted(() => {
         </Card>
 
         <!-- Chat Area -->
-        <Card class="w-2/3 flex flex-col h-full bg-white shadow-sm p-0 overflow-hidden">
+        <Card class="w-full md:w-2/3 min-h-0 flex flex-col flex-1 md:h-full bg-white shadow-sm p-0 overflow-hidden">
             <template v-if="activeContact">
                 <!-- Chat Header -->
                 <div class="p-4 border-b border-gray-100 flex items-center gap-3 bg-white z-10 shadow-sm">

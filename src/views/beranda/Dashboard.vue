@@ -33,7 +33,7 @@ const goToPoinLomba = () => {
 <template>
   <div class="-mt-20 lg:-mt-24">
     <!-- =================== HERO SECTION =================== -->
-    <section class="relative min-h-screen pt-32 pb-20 flex items-center text-white px-5 lg:px-20 overflow-hidden" :style="{
+    <section class="relative min-h-[450px] lg:min-h-screen pt-24 sm:pt-32 pb-10 lg:pb-20 flex items-center text-white px-4 sm:px-5 lg:px-20 overflow-hidden bg-[#4554A5]" :style="{
       backgroundImage: `url(${bg})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -41,7 +41,7 @@ const goToPoinLomba = () => {
     }">
       <div class="absolute inset-0 bg-gradient-to-br from-[#4954DE]/20 via-transparent to-[#FFD277]/10"></div>
       
-      <div class="relative flex flex-col lg:flex-row items-center w-full justify-between gap-12 lg:gap-16 max-w-7xl mx-auto">
+      <div class="relative z-10 flex flex-col lg:flex-row items-center w-full justify-between gap-10 lg:gap-16 max-w-7xl mx-auto">
 
         <!-- TEXT -->
         <div class="max-w-2xl space-y-8 animate-fade-in-up">
@@ -49,7 +49,7 @@ const goToPoinLomba = () => {
             <p class="text-sm font-semibold text-white/90">Platform Lomba Terpercaya</p>
           </div>
           
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
+          <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
             Temukan dan Ikuti <br />
             Lomba Sesuai <br />
             <span class="relative inline-block">
@@ -62,7 +62,7 @@ const goToPoinLomba = () => {
             </span>
           </h1>
 
-          <p class="text-white/90 text-lg lg:text-xl leading-relaxed font-medium">
+          <p class="text-white/90 text-base sm:text-lg lg:text-xl leading-relaxed font-medium">
             Jelajahi berbagai lomba yang menarik dan kembangkan bakat terbaikmu
             bersama ribuan peserta lainnya.
           </p>
@@ -113,12 +113,12 @@ const goToPoinLomba = () => {
         </div>
 
         <!-- ILLUSTRATION -->
-        <div class="relative flex justify-center lg:justify-end animate-fade-in-scale">
+        <div class="hidden lg:flex relative justify-center lg:justify-end animate-fade-in-scale">
           <div class="relative">
             <div class="absolute -inset-4 bg-gradient-to-r from-[#FFD277]/30 to-[#4954DE]/30 rounded-3xl blur-2xl animate-pulse-slow"></div>
-            <img :src="mask" class="relative rounded-3xl lg:w-[420px] xl:w-[480px] shadow-2xl transform hover:scale-105 transition-transform duration-500" />
+            <img :src="mask" alt="Ilustrasi platform InfoLomba" class="relative block w-full max-w-[420px] xl:max-w-[480px] rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500" />
             
-            <div class="absolute -top-6 -right-6 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-xl animate-float">
+            <div class="absolute -top-4 -right-2 sm:-right-6 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-4 shadow-xl animate-float">
               <div class="flex items-center gap-3">
                 <div class="w-12 h-12 bg-gradient-to-br from-[#4954DE] to-[#7592ff] rounded-xl flex items-center justify-center">
                   <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

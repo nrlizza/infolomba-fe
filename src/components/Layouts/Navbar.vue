@@ -8,7 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { ref, onMounted, onUnmounted } from 'vue';
 import avatar from '@/assets/avatar.jpg'
 import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon, PresentationChart, ListIcon } from "../Icons";
-import Navbar from '@/assets/Navbar.svg'
+import Navbar from '@/assets/logo.svg'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,6 +16,7 @@ const taskStore = useTaskStore()
 const queryClient = useQueryClient()
 
 const isDropdownOpen = ref(false)
+const isMobileMenuOpen = ref(false)
 const scrolled = ref(false)
 
 const token = cookie?.get('token')
@@ -31,6 +32,7 @@ const logout = async () => {
 const isActive = (path) => route.path.startsWith(path)
 
 const navigateTo = (path) => {
+  isMobileMenuOpen.value = false
   router.push(path)
 }
 
@@ -49,9 +51,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="fixed top-0 left-0 right-0 z-[999] flex justify-center p-3 lg:p-4 pointer-events-none">
+  <div class="fixed top-0 left-0 right-0 z-[9999] flex justify-center p-3 lg:p-4 pointer-events-none">
     <nav 
-      class="pointer-events-auto flex items-center justify-between w-full max-w-6xl h-16 px-5 lg:px-8 transition-all duration-500 rounded-[1.75rem] border border-white/20 shadow-[0_8px_32px_0_rgba(73,84,222,0.1)]"
+      class="pointer-events-auto relative flex items-center justify-between w-full max-w-6xl h-16 px-4 sm:px-5 lg:px-8 transition-all duration-500 rounded-[1.75rem] border border-white/20 shadow-[0_8px_32px_0_rgba(73,84,222,0.1)]"
       :class="scrolled ? 'bg-white/90 backdrop-blur-xl scale-[0.98] shadow-[0_20px_50px_rgba(0,0,0,0.08)]' : 'bg-white/95 backdrop-blur-lg shadow-lg'"
     >
       <!-- Logo Section -->
@@ -59,7 +61,7 @@ onUnmounted(() => {
         to="/beranda" 
         class="flex items-center transition-transform duration-300 hover:scale-105 active:scale-95"
       >
-        <img :src="Navbar" alt="Logo" class="h-10 lg:h-12 w-auto object-contain" />
+        <img :src="Navbar" alt="Logo" class="block h-8 sm:h-11 lg:h-12 w-auto max-w-[90px] sm:max-w-[140px] object-contain" />
       </router-link>
 
       <!-- Center Links (Desktop) -->
@@ -83,29 +85,62 @@ onUnmounted(() => {
         </router-link>
       </div>
 
+      <div
+        v-if="isMobileMenuOpen && decoded?.role !== 'PANITIA' && decoded?.role !== 'ADMIN'"
+        class="absolute left-3 right-3 top-[calc(100%+0.75rem)] md:hidden rounded-2xl border border-gray-100 bg-white p-2 shadow-xl"
+      >
+        <router-link
+          v-for="item in [
+            { label: 'Beranda', path: '/beranda' },
+            { label: 'Info Lomba', path: '/info-lomba' },
+            { label: 'Riwayat', path: '/riwayat-lomba' }
+          ]"
+          :key="item.path"
+          :to="item.path"
+          class="block rounded-xl px-4 py-3 text-sm font-bold text-gray-700 hover:bg-[#4954DE]/5 hover:text-[#4954DE]"
+          @click="isMobileMenuOpen = false"
+        >
+          {{ item.label }}
+        </router-link>
+      </div>
+
       <!-- Action Buttons / Profile -->
       <div class="flex items-center gap-2 lg:gap-3">
         <template v-if="!token">
           <button
             @click="navigateTo('/login')"
-            class="hidden sm:block px-5 py-2 text-[14px] font-bold text-gray-700 hover:text-[#4954DE] transition-colors"
+            class="flex-shrink-0 px-1.5 sm:px-5 py-2 text-[11px] sm:text-[14px] font-bold text-gray-700 hover:text-[#4954DE] transition-colors"
           >
             Login
           </button>
           <button
             @click="navigateTo('/register')"
-            class="group relative flex items-center gap-2 px-6 py-2.5 bg-[#4954DE] text-white text-[14px] font-bold rounded-full overflow-hidden transition-all duration-300 hover:shadow-[0_10px_25px_-5px_rgba(73,84,222,0.4)] active:scale-95"
+            class="group relative flex-shrink-0 flex items-center gap-2 px-3 sm:px-6 py-2.5 bg-[#4954DE] text-white text-[11px] sm:text-[14px] font-bold rounded-full overflow-hidden transition-all duration-300 hover:shadow-[0_10px_25px_-5px_rgba(73,84,222,0.4)] active:scale-95"
           >
             <span class="relative z-10">Register Now</span>
             <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
           </button>
         </template>
 
-        <div v-else class="relative">
-          <button 
-            class="flex items-center gap-2 p-1 rounded-full transition-all duration-300 hover:bg-[#4954DE]/5 group"
-            @click.prevent="isDropdownOpen = !isDropdownOpen"
+        <div v-else class="flex items-center gap-2">
+          <button
+            class="md:hidden flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full text-gray-700 hover:bg-[#4954DE]/5"
+            aria-label="Buka menu navigasi"
+            @click="isMobileMenuOpen = !isMobileMenuOpen"
           >
+            <svg v-if="!isMobileMenuOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg v-else class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          
+          <div class="relative">
+            <button 
+              class="flex items-center gap-2 p-1 rounded-full transition-all duration-300 hover:bg-[#4954DE]/5 group"
+              @click.prevent="isDropdownOpen = !isDropdownOpen"
+            >
             <div class="relative">
               <img 
                 src="/avatar.jpg" 
@@ -177,6 +212,7 @@ onUnmounted(() => {
               </div>
             </div>
           </transition>
+          </div>
         </div>
       </div>
     </nav>

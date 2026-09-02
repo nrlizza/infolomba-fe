@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { FwbInput, FwbSelect, FwbButton } from "flowbite-vue";
 import { useTaskStore } from "@/stores/Taskstore";
 import DatePicker from "@/components/Ui/FormInput/DatePicker.vue";
@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+const emit = defineEmits(['close', 'switchToLogin']);
 const store = useTaskStore();
 const router = useRouter();
 
@@ -35,7 +36,6 @@ const showPassword = ref(false);
 const togglePassword = () => (showPassword.value = !showPassword.value);
 
 const handleRegister = async () => {
-    // Daftar field wajib
     const requiredFields = [
         { key: "name", label: "Nama Lengkap" },
         { key: "tanggal_lahir", label: "Tanggal Lahir" },
@@ -47,7 +47,6 @@ const handleRegister = async () => {
         { key: "password", label: "Password" },
     ];
 
-    // Cek field kosong
     const emptyField = requiredFields.find(field => !form.value[field.key]);
     if (emptyField) {
         return Swal.fire({
@@ -59,11 +58,9 @@ const handleRegister = async () => {
     }
 
     try {
-        // Proses register
         const result = await store.register(form.value);
 
         if (result === 201) {
-            // Notifikasi sukses
             await Swal.fire({
                 icon: "success",
                 title: "Berhasil",
@@ -71,21 +68,18 @@ const handleRegister = async () => {
                 confirmButtonText: "Masuk",
             });
 
-            // Arahkan ke halaman login
-            router.push("/login");
+            emit('switchToLogin');
         } else {
-            // Notifikasi error
             Swal.fire({
                 icon: "error",
                 title: "Gagal",
-                text: error?.message || "Terjadi kesalahan saat pendaftaran",
+                text: "Terjadi kesalahan saat pendaftaran",
                 confirmButtonText: "Coba Lagi",
             });
         }
     } catch (error) {
         console.error("Register error:", error);
 
-        // Notifikasi error
         Swal.fire({
             icon: "error",
             title: "Gagal",
@@ -95,32 +89,58 @@ const handleRegister = async () => {
     }
 };
 
+const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+        emit('close');
+    }
+};
+
+const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+        emit('close');
+    }
+};
+
+const handleSwitchToLogin = () => {
+    emit('switchToLogin');
+};
+
+onMounted(() => {
+    document.addEventListener('keydown', handleEscape);
+    document.body.style.overflow = 'hidden';
+});
+
+onUnmounted(() => {
+    document.removeEventListener('keydown', handleEscape);
+    document.body.style.overflow = '';
+});
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-blue-50 px-4">
-      <div class="bg-white rounded-2xl shadow-lg w-full max-w-3xl p-8 overflow-visible relative">
+  <div 
+    class="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 animate-fade-in overflow-y-auto py-8"
+    @click="handleBackdropClick"
+  >
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-8 animate-scale-in relative my-auto">
           <button
-              @click="router.push('/beranda')"
-              class="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors group z-10"
+              @click="emit('close')"
+              class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors z-10"
+              aria-label="Tutup"
           >
-              <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
-              <span class="text-sm font-medium">Kembali</span>
           </button>
-          
-          <div class="flex flex-col items-center mb-2">
+
+          <div class="flex flex-col items-center mb-6">
               <div class="bg-blue-600 text-white p-3 rounded-xl">
                   <font-awesome-icon icon="trophy" class="text-xl" />
               </div>
-              <h2 class="text-lg font-semibold text-center text-gray-800 mb-5">Daftar InfoLomba</h2>
+              <h2 class="text-lg font-semibold text-center text-gray-800 mt-3">Daftar InfoLomba</h2>
           </div>
 
-          <!-- Form -->
           <form @submit.prevent="handleRegister" class="space-y-6">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- Nama -->
                   <fwb-input 
                       v-model="form.name" 
                       label="Nama Lengkap" 
@@ -133,7 +153,6 @@ const handleRegister = async () => {
                       </template>
                   </fwb-input>
 
-                  <!-- Tanggal Lahir -->
                   <DatePicker 
                       class="bg-white w-full"
                       v-model="form.tanggal_lahir" 
@@ -144,7 +163,6 @@ const handleRegister = async () => {
                       autocomplete="off"
                   />
 
-                  <!-- Email -->
                   <fwb-input 
                       v-model="form.email" 
                       type="email" 
@@ -158,7 +176,6 @@ const handleRegister = async () => {
                       </template>
                   </fwb-input>
 
-                  <!-- Telepon -->
                   <fwb-input 
                       v-model="form.nomor_telephone" 
                       type="tel" 
@@ -172,7 +189,6 @@ const handleRegister = async () => {
                       </template>
                   </fwb-input>
 
-                  <!-- Pendidikan -->
                   <fwb-select 
                       class="fwb-select"
                       v-model="form.id_pendidikan" 
@@ -183,7 +199,6 @@ const handleRegister = async () => {
                       required
                   />
 
-                  <!-- Instansi -->
                   <fwb-input 
                       v-model="form.nama_instansi" 
                       label="Nama Instansi" 
@@ -196,7 +211,6 @@ const handleRegister = async () => {
                       </template>
                   </fwb-input>
 
-                  <!-- Username -->
                   <fwb-input 
                       v-model="form.username" 
                       label="Username" 
@@ -209,7 +223,6 @@ const handleRegister = async () => {
                       </template>
                   </fwb-input>
 
-                  <!-- Password -->
                   <div class="relative">
                       <fwb-input 
                           v-model="form.password" 
@@ -229,18 +242,46 @@ const handleRegister = async () => {
                   </div>
               </div>
 
-              <!-- Submit -->
               <fwb-button type="submit" color="blue" size="lg" class="w-full flex justify-center items-center gap-2">
                   <font-awesome-icon icon="user-plus" />
                   Daftar Sekarang
               </fwb-button>
 
-              <!-- Link ke Login -->
               <p class="text-sm text-center text-gray-600">
                   Sudah punya akun?
-                  <a href="/login" class="text-blue-600 font-medium hover:underline">Masuk di sini</a>
+                  <button type="button" @click="handleSwitchToLogin" class="text-blue-600 font-medium hover:underline">Masuk di sini</button>
               </p>
           </form>
       </div>
   </div>
 </template>
+
+<style scoped>
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+}
+
+.animate-scale-in {
+    animation: scale-in 0.3s ease-out;
+}
+</style>

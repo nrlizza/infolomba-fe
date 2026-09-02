@@ -16,7 +16,7 @@
       :class="[isExpanded || isHovered ? 'lg:ml-[250px]' : 'lg:ml-[90px]']"
     >
       <app-header />
-      <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+      <div class="w-full min-w-0 p-3 mx-auto max-w-(--breakpoint-2xl) sm:p-4 md:p-6">
         <slot></slot>
       </div>
     </div>

@@ -20,6 +20,7 @@ const selectedTingkat = ref("");
 const selectedProvinsi = ref("");
 const selectedJenis = ref("");
 const selectedPembayaran = ref("");
+const isFilterOpen = ref(false);
 
 // Filter parameters untuk API - digunakan saat tombol Cari diklik
 const activeFilters = ref({});
@@ -44,6 +45,7 @@ const handleSearch = () => {
   
   // Update active filters akan trigger query secara otomatis
   activeFilters.value = { ...params };
+  isFilterOpen.value = false;
 };
 
 </script>
@@ -53,7 +55,7 @@ const handleSearch = () => {
     <!-- HERO SECTION (COMPACT) -->
     <div class="relative bg-white border-b border-gray-100 overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-transparent to-blue-50/30"></div>
-      <div class="max-w-7xl mx-auto px-6 pt-4 pb-8 md:pt-6 md:pb-10 relative z-10 text-center">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-8 md:pt-6 md:pb-10 relative z-10 text-center">
         <h1 class="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight mb-1">
           INFO <span class="text-indigo-600">LOMBA</span>
         </h1>
@@ -64,9 +66,27 @@ const handleSearch = () => {
     </div>
 
     <!-- FILTER SECTION (COMPACT) -->
-    <div class="max-w-7xl mx-auto px-6 -mt-6 relative z-20">
-      <div class="bg-white rounded-xl shadow-lg shadow-indigo-100/40 border border-gray-100 p-4 md:p-5">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-end">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-6 relative z-20">
+      <div class="bg-white rounded-xl shadow-lg shadow-indigo-100/40 border border-gray-100 p-2 sm:p-4 md:p-5">
+        <button
+          type="button"
+          class="md:hidden w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm font-bold text-slate-700 hover:bg-indigo-50 transition-colors"
+          :aria-expanded="isFilterOpen"
+          aria-controls="lomba-filters"
+          @click="isFilterOpen = !isFilterOpen"
+        >
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 4h18M6 12h12m-9 8h6" />
+            </svg>
+            Filter Lomba
+          </span>
+          <svg class="w-4 h-4 text-slate-400 transition-transform" :class="{ 'rotate-180': isFilterOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div id="lomba-filters" :class="[isFilterOpen ? 'grid' : 'hidden', 'md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-end mt-2 md:mt-0']">
           
           <!-- Kategori Lomba -->
           <div class="space-y-1">
@@ -116,7 +136,7 @@ const handleSearch = () => {
     </div>
 
     <!-- MAIN CONTENT (COMPACT) -->
-    <div class="max-w-7xl mx-auto px-6 pt-6 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-8">
       
       <!-- Loading State -->
       <div v-if="isLoadingLomba" class="flex flex-col items-center justify-center py-12 space-y-4">
