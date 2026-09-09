@@ -5,8 +5,19 @@ export async function globalAuthGuard(to, from, next) {
   const accessToken = getToken();
   const requiresAuth = to.meta.requiresAuth;
   const guestOnly = to.meta.guestOnly;
+  const adminGuestOnly = to.meta.adminGuestOnly;
   const allowedRoles = to.meta.allowedRoles;
 
+  // Jika halaman adminGuestOnly (misal /admin-login) dan sudah ada token
+  if (adminGuestOnly && accessToken) {
+    const user = getUser();
+    if (user?.role?.toUpperCase() === 'ADMIN') {
+      return next({ path: '/admin-dashboard' });
+    }
+    return next({ path: '/beranda' });
+  }
+
+  // Jika halaman guestOnly (misal /login, /register) dan sudah login
   if (guestOnly && accessToken) {
     return next({ path: '/' });
   }
@@ -41,5 +52,4 @@ export async function globalAuthGuard(to, from, next) {
   }
 
   next();
-}
- 
+}

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
-import { ChevronDownIcon, HorizontalDots, PresentationChart } from "../../Icons";
+import { ChevronDownIcon, HorizontalDots, PresentationChart, ClipboardListIcon, ChatBubbleIcon } from "../../Icons";
 import { useSidebar } from "../../../composables/useSidebar";
 import { Admin } from "../../Menu/Admin";
 import { Peserta } from "../../Menu/Peserta";
@@ -30,12 +30,12 @@ if (decoded?.role?.toUpperCase() === 'ADMIN') {
         path: "/admin-dashboard"
     },
     {
-        icon: PresentationChart, // Or another icon if we import one, but PresentationChart is fine
+        icon: ClipboardListIcon,
         name: "Riwayat Validasi",
         path: "/admin-riwayat"
     },
     {
-        icon: PresentationChart,
+        icon: ChatBubbleIcon,
         name: "Chat Panitia",
         path: "/admin-chat"
     });

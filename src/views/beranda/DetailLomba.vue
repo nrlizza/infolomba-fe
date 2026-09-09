@@ -48,7 +48,9 @@ watchEffect(async () => {
                     id_user: userData.value.id_user
                 }
             });
-            if (res?.data?.data?.length > 0) {
+            const historyData = res?.data?.data;
+            const hasRegistered = historyData && (Array.isArray(historyData) ? historyData.length > 0 : true);
+            if (hasRegistered) {
                 isRegistered.value = true;
             }
         } catch (error) {
@@ -77,8 +79,12 @@ const handlePay = async () => {
             }
         );
 
-        if (cekLomba?.data?.data?.length > 0) {
+        const historyData = cekLomba?.data?.data;
+        const hasRegistered = historyData && (Array.isArray(historyData) ? historyData.length > 0 : true);
+
+        if (hasRegistered) {
             Swal.fire("Gagal", "Anda sudah terdaftar di lomba ini", "error");
+            isRegistered.value = true;
             return;
         }
 
@@ -149,7 +155,8 @@ const handlePay = async () => {
         }
     } catch (err) {
         console.error(err);
-        Swal.fire("Error", "Terjadi kesalahan", "error");
+        const errorMsg = err.response?.data?.message || "Terjadi kesalahan";
+        Swal.fire("Gagal", errorMsg, "error");
     } finally {
         loading.value = false;
     }

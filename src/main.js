@@ -24,7 +24,9 @@ import {
   faPenToSquare,
   faTrash,
   faCheck,
-  faXmark
+  faXmark,
+  faShieldHalved,
+  faUserTie
 } from '@fortawesome/free-solid-svg-icons'
 
 // Sweetalert
@@ -51,7 +53,9 @@ library.add(
   faPenToSquare,
   faTrash,
   faCheck,
-  faXmark
+  faXmark,
+  faShieldHalved,
+  faUserTie
 )
 
 const queryClient = new QueryClient()

@@ -75,6 +75,15 @@ const formatRupiah = (value) => {
     }).format(value)
 }
 
+const formatDate = (dateStr) => {
+    if (!dateStr) return '-'
+    return new Date(dateStr).toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    })
+}
+
 const handleDetail = (lomba) => {
     router.push('/detail-lomba/' + lomba.id_lomba)
 }
@@ -133,7 +142,9 @@ const handleDetail = (lomba) => {
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                     </div>
-                    <span class="text-sm text-gray-700 font-medium">{{ new Date(lomba.tanggal_lomba).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) }}</span>
+                    <span class="text-sm text-gray-700 font-medium">
+                        {{ formatDate(lomba.tanggal_lomba) }} — {{ formatDate(lomba.tanggal_batas_pendaftaran) }}
+                    </span>
                 </div>
                 <div class="flex items-center gap-2.5">
                     <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4954DE]/10 to-[#4954DE]/5 flex items-center justify-center flex-shrink-0 group-hover:from-[#4954DE]/20 group-hover:to-[#4954DE]/10 transition-all">

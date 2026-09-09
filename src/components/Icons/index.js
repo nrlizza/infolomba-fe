@@ -7,6 +7,8 @@ import SettingsIcon from "./SettingsIcon.vue";
 import InfoCircleIcon from "./InfoCircleIcon.vue";
 import PresentationChart from "./PresentationChart.vue";
 import DbIcon from "./DbIcon.vue";
+import ClipboardListIcon from "./ClipboardListIcon.vue";
+import ChatBubbleIcon from "./ChatBubbleIcon.vue";
 
 export {
     ListIcon,
@@ -17,5 +19,7 @@ export {
     SettingsIcon,
     InfoCircleIcon,
     PresentationChart,
-    DbIcon
+    DbIcon,
+    ClipboardListIcon,
+    ChatBubbleIcon
 }

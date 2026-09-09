@@ -85,10 +85,10 @@ const progressPercentage = computed(() => (userPoint.value / maxPoint.value) * 1
                     </div>
                     <div class="flex-1 min-w-0">
                       <h3 class="text-sm font-black text-slate-900">Ikuti Lomba</h3>
-                      <p class="text-xs text-slate-600">Raih +10 poin setiap partisipasi</p>
+                      <p class="text-xs text-slate-600">Raih +20 poin setiap partisipasi</p>
                     </div>
                     <div class="flex-shrink-0 flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg">
-                      <span class="text-lg font-black text-green-600">+10</span>
+                      <span class="text-lg font-black text-green-600">+20</span>
                     </div>
                   </div>
                 </div>
