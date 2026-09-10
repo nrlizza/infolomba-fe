@@ -1,11 +1,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-import { FwbButton, FwbInput } from "flowbite-vue";
 import { useTaskStore } from "@/stores/Taskstore";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-const emit = defineEmits(['close', 'switchToRegister']);
+const emit = defineEmits(['close', 'authenticated', 'switchToRegister']);
 const store = useTaskStore();
 const router = useRouter();
 
@@ -30,9 +29,12 @@ const handleLogin = async () => {
         });
         
         if (result === 200) {
+            emit('authenticated');
             emit('close');
             if (form.value.role === 'ADMIN') {
                 router.push("/admin-dashboard");
+            } else if (form.value.role === 'PANITIA') {
+                router.push("/dashboard-panitia");
             } else {
                 router.push("/beranda");
             }
@@ -71,7 +73,6 @@ onUnmounted(() => {
     document.body.style.overflow = '';
 });
 
-const roles = ["ADMIN", "PANITIA", "PESERTA"];
 </script>
 
 <template>
@@ -79,15 +80,15 @@ const roles = ["ADMIN", "PANITIA", "PESERTA"];
         class="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 animate-fade-in"
         @click="handleBackdropClick"
     >
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6 border border-gray-100 animate-scale-in relative">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 sm:p-8 space-y-5 border border-gray-100 animate-scale-in relative">
             <button
                 @click="emit('close')"
-                class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label="Tutup"
+                class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
             >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
+                Kembali
             </button>
 
             <div class="text-center space-y-2">
@@ -98,32 +99,26 @@ const roles = ["ADMIN", "PANITIA", "PESERTA"];
                 <p class="text-sm text-gray-500">Masuk ke akun Anda untuk melanjutkan</p>
             </div>
 
-            <div class="grid grid-cols-3 gap-2">
-                <fwb-button v-for="r in roles" :key="r" size="sm" :color="form.role === r ? 'blue' : 'light'" class="w-full rounded-md" @click="form.role = r">
-                    {{ r }}
-                </fwb-button>
-            </div>
-
             <form class="space-y-5" @submit.prevent="handleLogin">
                 <div class="relative">
-                    <label for="username" class="block mb-1 text-sm font-medium text-gray-700"> Username </label>
-                    <font-awesome-icon icon="user" class="absolute left-3 top-9 text-gray-400 z-10" />
-                    <fwb-input id="username" v-model="form.username" placeholder="Masukkan username" type="text" required class="pl-10" />
+                    <label for="modal-username" class="block mb-1 text-sm font-medium text-gray-700"> Username </label>
+                    <font-awesome-icon icon="user" class="absolute left-3 top-9 text-gray-400 pointer-events-none z-10" />
+                    <input id="modal-username" v-model="form.username" placeholder="Masukkan username" type="text" required autocomplete="username" class="w-full rounded-lg border border-gray-300 bg-gray-50 py-2.5 pl-10 pr-3 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
                 </div>
 
                 <div class="relative">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1"> Password </label>
-                    <font-awesome-icon icon="lock" class="absolute left-3 top-9 text-gray-400 z-10" />
-                    <fwb-input id="password" v-model="form.password" :type="showPassword ? 'text' : 'password'" placeholder="Masukkan password" required class="pl-10" />
+                    <label for="modal-password" class="block text-sm font-medium text-gray-700 mb-1"> Password </label>
+                    <font-awesome-icon icon="lock" class="absolute left-3 top-9 text-gray-400 pointer-events-none z-10" />
+                    <input id="modal-password" v-model="form.password" :type="showPassword ? 'text' : 'password'" placeholder="Masukkan password" required autocomplete="current-password" class="w-full rounded-lg border border-gray-300 bg-gray-50 py-2.5 pl-10 pr-10 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
                     <button type="button" class="absolute top-8.5 right-3 text-gray-400" @click="togglePassword">
                         <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
                     </button>
                 </div>
 
-                <fwb-button type="submit" color="blue" size="lg" class="w-full flex justify-center items-center gap-2">
+                <button type="submit" class="w-full h-11 rounded-lg bg-blue-600 text-sm font-bold text-white shadow-md shadow-blue-200 transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 flex justify-center items-center gap-2">
                     <font-awesome-icon icon="right-to-bracket" />
                     Masuk
-                </fwb-button>
+                </button>
 
                 <div class="flex items-center gap-3 my-3">
                     <hr class="flex-grow border-gray-200" />

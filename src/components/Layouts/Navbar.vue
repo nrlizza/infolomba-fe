@@ -5,10 +5,12 @@ import { useTaskStore } from '@/stores/Taskstore'
 import { useQueryClient } from '@tanstack/vue-query'
 import cookie from 'vue-cookies'
 import { jwtDecode } from "jwt-decode";
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import avatar from '@/assets/avatar.jpg'
 import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon, PresentationChart, ListIcon } from "../Icons";
 import Navbar from '@/assets/logo.svg'
+import LoginModal from '@/components/Modals/LoginModal.vue'
+import RegisterModal from '@/components/Modals/RegisterModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -18,34 +20,51 @@ const queryClient = useQueryClient()
 const isDropdownOpen = ref(false)
 const isMobileMenuOpen = ref(false)
 const scrolled = ref(false)
+const activeAuthModal = ref(null)
 
-const token = cookie?.get('token')
-const decoded = token ? jwtDecode(token) : null
+const token = ref(cookie?.get('token'))
+const decoded = computed(() => token.value ? jwtDecode(token.value) : null)
+
+const handleAuthenticated = () => {
+  token.value = cookie.get('token')
+  activeAuthModal.value = null
+}
 
 const logout = async () => {
   await taskStore.logout()
   queryClient.clear()
-  await router.push('/login')
+  token.value = null
+  await router.push('/beranda')
   isDropdownOpen.value = false
 }
 
 const isActive = (path) => route.path.startsWith(path)
 
-const navigateTo = (path) => {
+const openAuthModal = (modal) => {
   isMobileMenuOpen.value = false
-  router.push(path)
+  activeAuthModal.value = modal
+}
+
+const closeAuthModal = () => {
+  activeAuthModal.value = null
 }
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 10
 }
 
+const handleOpenAuthModal = (event) => {
+  activeAuthModal.value = event.detail === 'register' ? 'register' : 'login'
+}
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  window.addEventListener('open-auth-modal', handleOpenAuthModal)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('open-auth-modal', handleOpenAuthModal)
 })
 
 </script>
@@ -53,7 +72,7 @@ onUnmounted(() => {
 <template>
   <div class="fixed top-0 left-0 right-0 z-[9999] flex justify-center p-3 lg:p-4 pointer-events-none">
     <nav 
-      class="pointer-events-auto relative flex items-center justify-between w-full max-w-6xl h-16 px-4 sm:px-5 lg:px-8 transition-all duration-500 rounded-[1.75rem] border border-white/20 shadow-[0_8px_32px_0_rgba(73,84,222,0.1)]"
+      class="pointer-events-auto relative flex items-center justify-between w-full max-w-6xl 2xl:max-w-[1400px] h-16 px-4 sm:px-5 lg:px-8 transition-all duration-500 rounded-[1.75rem] border border-white/20 shadow-[0_8px_32px_0_rgba(73,84,222,0.1)]"
       :class="scrolled ? 'bg-white/90 backdrop-blur-xl scale-[0.98] shadow-[0_20px_50px_rgba(0,0,0,0.08)]' : 'bg-white/95 backdrop-blur-lg shadow-lg'"
     >
       <!-- Logo Section -->
@@ -108,13 +127,13 @@ onUnmounted(() => {
       <div class="flex items-center gap-2 lg:gap-3">
         <template v-if="!token">
           <button
-            @click="navigateTo('/login')"
+            @click="openAuthModal('login')"
             class="flex-shrink-0 px-1.5 sm:px-5 py-2 text-[11px] sm:text-[14px] font-bold text-gray-700 hover:text-[#4954DE] transition-colors"
           >
             Login
           </button>
           <button
-            @click="navigateTo('/register')"
+            @click="openAuthModal('register')"
             class="group relative flex-shrink-0 flex items-center gap-2 px-3 sm:px-6 py-2.5 bg-[#4954DE] text-white text-[11px] sm:text-[14px] font-bold rounded-full overflow-hidden transition-all duration-300 hover:shadow-[0_10px_25px_-5px_rgba(73,84,222,0.4)] active:scale-95"
           >
             <span class="relative z-10">Register Now</span>
@@ -217,6 +236,18 @@ onUnmounted(() => {
       </div>
     </nav>
   </div>
+
+  <LoginModal
+    v-if="activeAuthModal === 'login'"
+    @close="closeAuthModal"
+    @authenticated="handleAuthenticated"
+    @switch-to-register="activeAuthModal = 'register'"
+  />
+  <RegisterModal
+    v-if="activeAuthModal === 'register'"
+    @close="closeAuthModal"
+    @switch-to-login="activeAuthModal = 'login'"
+  />
 </template>
 
 <style scoped>

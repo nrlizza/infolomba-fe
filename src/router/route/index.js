@@ -1,15 +1,5 @@
 export const root = [
   {
-    path: "/login",
-    name: "Login",
-    meta: {
-      requiresAuth: false,
-      guestOnly: true,
-      layout: "empty"
-    },
-    component: () => import("@/views/auth/Login.vue"),
-  },
-  {
     path: "/panitia-login",
     name: "PanitiaLogin",
     meta: {
@@ -38,15 +28,5 @@ export const root = [
       layout: "empty"
     },
     component: () => import("@/views/auth/AdminLogin.vue"),
-  },
-  {
-    path: "/register",
-    name: "Register",
-    meta: {
-      requiresAuth: false,
-      guestOnly: true,
-      layout: "empty"
-    },
-    component: () => import("@/views/auth/Register.vue"),
   },
 ];

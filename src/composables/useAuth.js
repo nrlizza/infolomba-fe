@@ -34,7 +34,7 @@ export function useAuth() {
 
   const logout = () => {
     cookie.remove('token');
-    window.location.href = '/login';
+    window.location.href = '/beranda';
   };
 
   return {

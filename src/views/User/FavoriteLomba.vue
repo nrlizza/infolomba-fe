@@ -16,23 +16,23 @@ const { data: lombas, isLoading, isError } = useQuery({
 </script>
 
 <template>
-    <div class="min-h-screen bg-slate-50/50">
+    <div class="bg-slate-50/50">
         <div class="relative bg-white border-b border-gray-100 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-transparent to-blue-50/30"></div>
-            <div class="max-w-7xl mx-auto px-6 pt-6 pb-10 relative z-10 text-center">
-                <h1 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight mb-2">
+            <div class="max-w-6xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 pt-6 pb-10 relative z-10 text-center">
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight mb-2">
                     SIMPAN <span class="text-indigo-600">FAVORIT</span>
                 </h1>
-                <p class="text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
                     Pantau dan kelola semua kompetisi yang telah kamu simpan. Jangan lewatkan kesempatan untuk berprestasi!
                 </p>
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 py-8">
-            <div class="mb-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">Koleksi Tersimpan</h2>
-                <p v-if="lombas && lombas.length > 0" class="text-base text-gray-600">
+        <div class="max-w-6xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div class="mb-6 sm:mb-8">
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Koleksi Tersimpan</h2>
+                <p v-if="lombas && lombas.length > 0" class="text-sm sm:text-base text-gray-600">
                     Menampilkan <span class="font-bold text-[#4954DE]">{{ lombas.length }}</span> lomba favorit
                 </p>
             </div>
@@ -76,7 +76,7 @@ const { data: lombas, isLoading, isError } = useQuery({
                 </div>
             </div>
 
-            <div v-else class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-6">
                 <FwbCard v-for="lomba in lombas" :key="lomba.id_lomba" :lomba="lomba" />
             </div>
         </div>

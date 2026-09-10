@@ -46,7 +46,7 @@ AxiosInstance.interceptors.response.use(
       } catch (refreshError) {
         // Refresh gagal: hapus token, redirect login
         cookie.remove('token');
-        window.location.href = '/login';
+        window.location.href = '/beranda';
         return Promise.reject(refreshError);
       }
     }

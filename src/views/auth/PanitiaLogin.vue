@@ -45,11 +45,11 @@ const handleLogin = async () => {
 </script>
 
 <template>
-    <section class="bg-gradient-to-b from-purple-50 to-white min-h-screen flex items-center justify-center px-4">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-6 border border-purple-100 relative">
+    <section class="bg-gradient-to-b from-blue-50 to-white min-h-screen flex items-center justify-center px-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-6 border border-gray-100 relative">
             <button
-                @click="router.push('/login')"
-                class="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors group"
+                @click="router.push('/beranda')"
+                class="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors group"
             >
                 <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -58,7 +58,7 @@ const handleLogin = async () => {
             </button>
             
             <div class="text-center space-y-2 mt-4">
-                <div class="inline-flex items-center justify-center w-14 h-14 bg-purple-600 text-white rounded-xl">
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-[#4954DE] text-white rounded-xl">
                     <font-awesome-icon icon="user-tie" class="text-2xl" />
                 </div>
                 <h2 class="text-lg font-bold text-gray-800">Login Panitia</h2>
@@ -90,23 +90,23 @@ const handleLogin = async () => {
                 </div>
 
                 <!-- Submit -->
-                <fwb-button color="purple" type="submit" class="w-full text-center flex justify-center py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all" size="md">
+                <fwb-button type="submit" color="blue" size="lg" class="w-full flex justify-center items-center gap-2">
                     <div class="flex items-center gap-2">
                         <font-awesome-icon icon="sign-in-alt" />
-                        Masuk sebagai Panitia
+                        Masuk
                     </div>
                 </fwb-button>
 
                 <!-- Divider & Register -->
                 <div class="flex items-center gap-3 my-3">
-                    <hr class="flex-grow border-purple-200" />
-                    <span class="text-xs text-purple-400">atau</span>
-                    <hr class="flex-grow border-purple-200" />
+                    <hr class="flex-grow border-[#4954DE]" />
+                    <span class="text-xs text-[#4954DE]">atau</span>
+                    <hr class="flex-grow border-[#4954DE]" />
                 </div>
                 
                 <p class="text-sm text-center text-gray-600">
                     Belum punya akun?
-                    <router-link to="/panitia-register" class="text-purple-600 font-semibold hover:underline">Daftar sekarang</router-link>
+                    <router-link to="/panitia-register" class="text-[#4954DE] font-semibold hover:underline">Daftar sekarang</router-link>
                 </p>
             </form>
         </div>

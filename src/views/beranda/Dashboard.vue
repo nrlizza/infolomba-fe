@@ -33,7 +33,7 @@ const goToPoinLomba = () => {
 <template>
   <div class="-mt-20 lg:-mt-24">
     <!-- =================== HERO SECTION =================== -->
-    <section class="relative min-h-[450px] lg:min-h-screen pt-24 sm:pt-32 pb-10 lg:pb-20 flex items-center text-white px-4 sm:px-5 lg:px-20 overflow-hidden bg-[#4554A5]" :style="{
+    <section class="relative min-h-[450px] lg:min-h-[580px] xl:min-h-[620px] pt-24 sm:pt-32 pb-10 lg:pb-16 flex items-center text-white px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#4554A5]" :style="{
       backgroundImage: `url(${bg})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -41,7 +41,7 @@ const goToPoinLomba = () => {
     }">
       <div class="absolute inset-0 bg-gradient-to-br from-[#4954DE]/20 via-transparent to-[#FFD277]/10"></div>
       
-      <div class="relative z-10 flex flex-col lg:flex-row items-center w-full justify-between gap-10 lg:gap-16 max-w-7xl mx-auto">
+      <div class="relative z-10 flex flex-col lg:flex-row items-center w-full justify-between gap-10 lg:gap-16 max-w-6xl 2xl:max-w-[1400px] mx-auto">
 
         <!-- TEXT -->
         <div class="max-w-2xl space-y-8 animate-fade-in-up">
@@ -143,7 +143,7 @@ const goToPoinLomba = () => {
         <div class="absolute top-1/2 -right-24 w-80 h-80 bg-[#FFD277]/10 rounded-full blur-3xl"></div>
       </div>
 
-      <div class="max-w-6xl mx-auto px-5 lg:px-8 relative">
+      <div class="max-w-6xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div class="text-left">
             <div class="inline-block px-4 py-1.5 bg-[#4954DE]/10 rounded-full mb-3">
@@ -165,7 +165,7 @@ const goToPoinLomba = () => {
           </button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-6">
           <FwbCard v-for="lomba in data?.data" :key="lomba.nama_lomba" :lomba="lomba" class="animate-fade-in-up" />
         </div>
       </div>

@@ -27,14 +27,16 @@ export async function globalAuthGuard(to, from, next) {
       await refreshToken(); // jika berhasil, token baru otomatis diset
       return next();
     } catch {
-      return next({ path: '/login' });
+      setTimeout(() => window.dispatchEvent(new CustomEvent('open-auth-modal', { detail: 'login' })), 0);
+      return next({ path: '/beranda' });
     }
   }
 
   if (accessToken) {
     const user = getUser();
     if (!user) {
-      return next({ path: '/login' });
+      setTimeout(() => window.dispatchEvent(new CustomEvent('open-auth-modal', { detail: 'login' })), 0);
+      return next({ path: '/beranda' });
     }
 
     const userRole = user.role.toUpperCase();
@@ -52,4 +54,4 @@ export async function globalAuthGuard(to, from, next) {
   }
 
   next();
-}
+}

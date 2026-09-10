@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { FwbInput, FwbSelect, FwbButton } from "flowbite-vue";
 import { useTaskStore } from "@/stores/Taskstore";
 import DatePicker from "@/components/Ui/FormInput/DatePicker.vue";
@@ -35,6 +35,7 @@ const pendidikanOptions = [
 
 const showPassword = ref(false);
 const togglePassword = () => (showPassword.value = !showPassword.value);
+const passwordValid = computed(() => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(form.value.password));
 
 const handleRegister = async () => {
     // Daftar field wajib
@@ -58,6 +59,15 @@ const handleRegister = async () => {
             icon: "warning",
             title: "Data belum lengkap",
             text: `Field "${emptyField.label}" harus diisi.`,
+            confirmButtonText: "OK",
+        });
+    }
+
+    if (!passwordValid.value) {
+        return Swal.fire({
+            icon: "warning",
+            title: "Password belum valid",
+            text: "Password harus minimal 8 karakter dan memiliki huruf besar, huruf kecil, angka, serta simbol.",
             confirmButtonText: "OK",
         });
     }
@@ -106,7 +116,7 @@ const handleRegister = async () => {
       <div class="bg-white rounded-2xl shadow-lg w-full max-w-3xl p-8 overflow-visible relative">
           <button
               @click="router.push('/beranda')"
-              class="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors group z-10"
+              class="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors group z-10"
           >
               <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -115,17 +125,18 @@ const handleRegister = async () => {
           </button>
           
           <div class="flex flex-col items-center mb-2">
-              <div class="bg-purple-600 text-white p-3 rounded-xl">
+              <div class="bg-blue-600 text-white p-3 rounded-xl">
                   <font-awesome-icon icon="user-tie" class="text-xl" />
               </div>
               <h2 class="text-lg font-bold text-center text-gray-800 mb-5 mt-2">Daftar sebagai Panitia</h2>
           </div>
 
           <!-- Form -->
-          <form @submit.prevent="handleRegister" class="space-y-6">
+          <form @submit.prevent="handleRegister" class="required-form space-y-6">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <!-- Nama -->
                   <fwb-input 
+                      class="required-field"
                       v-model="form.name" 
                       label="Nama Lengkap" 
                       placeholder="Masukkan nama lengkap" 
@@ -138,18 +149,11 @@ const handleRegister = async () => {
                   </fwb-input>
 
                   <!-- Tanggal Lahir -->
-                  <DatePicker 
-                      class="bg-white w-full"
-                      v-model="form.tanggal_lahir" 
-                      :id="'tanggal_lahir'" 
-                      label="Tanggal Lahir" 
-                      max-date="true" 
-                      required
-                      autocomplete="off"
-                  />
+                  <DatePicker v-model="form.tanggal_lahir" label="Tanggal Lahir" max-date required />
 
                   <!-- Email -->
                   <fwb-input 
+                      class="required-field"
                       v-model="form.email" 
                       type="email" 
                       label="Email" 
@@ -164,6 +168,7 @@ const handleRegister = async () => {
 
                   <!-- Telepon -->
                   <fwb-input 
+                      class="required-field"
                       v-model="form.nomor_telephone" 
                       type="tel" 
                       label="Nomor Telepon" 
@@ -177,18 +182,23 @@ const handleRegister = async () => {
                   </fwb-input>
 
                   <!-- Pendidikan -->
-                  <fwb-select 
-                      class="fwb-select"
-                      v-model="form.id_pendidikan" 
-                      label="Tingkat Pendidikan" 
-                      :options="pendidikanOptions" 
-                      placement="bottom-start" 
-                      append-to-body 
-                      required
-                  />
+                  <div class="education-select">
+                      <label class="required-label block mb-2 text-sm font-medium text-gray-900">
+                          Tingkat Pendidikan <span class="text-red-500">*</span>
+                      </label>
+                      <fwb-select
+                          class="w-full"
+                          v-model="form.id_pendidikan"
+                          :options="pendidikanOptions"
+                          placement="bottom-start"
+                          append-to-body
+                          required
+                      />
+                  </div>
 
                   <!-- Instansi -->
                   <fwb-input 
+                      class="required-field"
                       v-model="form.nama_instansi" 
                       label="Nama Instansi" 
                       placeholder="Masukkan nama instansi/sekolah" 
@@ -202,6 +212,7 @@ const handleRegister = async () => {
 
                   <!-- Jabatan Panitia -->
                   <fwb-input 
+                      class="required-field"
                       v-model="form.jabatan_panitia" 
                       label="Jabatan Panitia" 
                       placeholder="Masukkan jabatan panitia" 
@@ -215,6 +226,7 @@ const handleRegister = async () => {
 
                   <!-- Bukti Surat Kepanitiaan -->
                   <fwb-input 
+                      class="required-field"
                       v-model="form.bukti_kepanitiaan" 
                       label="Bukti Surat Kepanitiaan" 
                       placeholder="Masukkan link Google Drive dll" 
@@ -228,6 +240,7 @@ const handleRegister = async () => {
 
                   <!-- Username -->
                   <fwb-input 
+                      class="required-field"
                       v-model="form.username" 
                       label="Username" 
                       placeholder="Masukkan username" 
@@ -240,7 +253,7 @@ const handleRegister = async () => {
                   </fwb-input>
 
                   <!-- Password -->
-                  <div class="relative">
+                  <div class="relative required-field">
                       <fwb-input 
                           v-model="form.password" 
                           label="Password"
@@ -256,21 +269,35 @@ const handleRegister = async () => {
                       <button type="button" @click="togglePassword" class="absolute top-8.5 right-3 text-gray-400">
                           <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
                       </button>
+                      <p v-if="form.password && !passwordValid" class="mt-1 text-xs text-red-600">
+                          Password minimal 8 karakter, dengan huruf besar, huruf kecil, angka, dan simbol.
+                      </p>
                   </div>
               </div>
 
               <!-- Submit -->
-              <fwb-button type="submit" color="purple" size="lg" class="w-full flex justify-center items-center gap-2">
+              <fwb-button type="submit" color="blue" size="lg" class="w-full flex justify-center items-center gap-2">
                   <font-awesome-icon icon="user-plus" />
-                  Daftar sebagai Panitia
+                  Daftar
               </fwb-button>
 
               <!-- Link ke Login -->
               <p class="text-sm text-center text-gray-600">
                   Sudah punya akun?
-                  <router-link to="/panitia-login" class="text-purple-600 font-bold hover:underline">Masuk di sini</router-link>
+                  <router-link to="/panitia-login" class="text-[#4954DE] font-bold hover:underline">Masuk di sini</router-link>
               </p>
           </form>
       </div>
   </div>
 </template>
+
+<style scoped>
+.required-form :deep(label:not(.required-label))::after {
+    content: " *";
+    color: #ef4444;
+}
+
+.education-select :deep(label)::after {
+    content: none !important;
+}
+</style>

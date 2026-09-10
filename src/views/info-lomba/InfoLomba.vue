@@ -55,7 +55,7 @@ const handleSearch = () => {
     <!-- HERO SECTION (COMPACT) -->
     <div class="relative bg-white border-b border-gray-100 overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-transparent to-blue-50/30"></div>
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-8 md:pt-6 md:pb-10 relative z-10 text-center">
+      <div class="max-w-6xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 pt-4 pb-8 md:pt-6 md:pb-10 relative z-10 text-center">
         <h1 class="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight mb-1">
           INFO <span class="text-indigo-600">LOMBA</span>
         </h1>
@@ -66,7 +66,7 @@ const handleSearch = () => {
     </div>
 
     <!-- FILTER SECTION (COMPACT) -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-6 relative z-20">
+    <div class="max-w-6xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 -mt-6 relative z-20">
       <div class="bg-white rounded-xl shadow-lg shadow-indigo-100/40 border border-gray-100 p-2 sm:p-4 md:p-5">
         <button
           type="button"
@@ -136,7 +136,7 @@ const handleSearch = () => {
     </div>
 
     <!-- MAIN CONTENT (COMPACT) -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-8">
+    <div class="max-w-6xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 pt-6 pb-8">
       
       <!-- Loading State -->
       <div v-if="isLoadingLomba" class="flex flex-col items-center justify-center py-12 space-y-4">
@@ -157,7 +157,7 @@ const handleSearch = () => {
 
       <!-- Data Display -->
       <div v-else>
-        <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-6">
           <FwbCard v-for="data in lomba?.data" :key="data.id_lomba" :lomba="data" />
         </div>
 

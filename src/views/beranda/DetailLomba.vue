@@ -61,7 +61,7 @@ watchEffect(async () => {
 
 const handlePay = async () => {
     if (!token) {
-        router.push("/login");
+        window.dispatchEvent(new CustomEvent('open-auth-modal', { detail: 'login' }));
         return;
     }
 
@@ -166,13 +166,13 @@ const handlePay = async () => {
 
 <template>
     <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
-        <div class="max-w-5xl mx-auto px-4 py-6">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 lg:items-start">
-                <Card class="p-0 overflow-hidden shadow-2xl order-2 lg:order-1 lg:h-fit">
-                    <img :src="lomba?.image_url" alt="gambar lomba" class="w-full h-auto object-contain min-h-[300px] lg:max-h-[430px]" />
+        <div class="max-w-6xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 py-6 lg:py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6 lg:items-start">
+                <Card class="p-0 overflow-hidden shadow-2xl order-2 lg:order-1 lg:h-fit lg:sticky lg:top-24">
+                    <img :src="lomba?.image_url" alt="gambar lomba" class="w-full h-auto object-contain min-h-[280px] sm:min-h-[300px] lg:max-h-[450px]" />
                 </Card>
                 
-                <div class="space-y-4 order-1 lg:order-2">
+                <div class="space-y-3 sm:space-y-4 order-1 lg:order-2">
                     <Card class="shadow-lg">
                         <div class="flex flex-wrap gap-2 mb-3">
                             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-500 text-white rounded-full text-xs font-semibold">
@@ -197,7 +197,7 @@ const handlePay = async () => {
                         </p>
                     </Card>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-2 gap-2 sm:gap-3">
                         <Card class="shadow-lg" v-if="lomba?.harga !== undefined">
                             <div class="text-center">
                                 <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center mx-auto mb-2">

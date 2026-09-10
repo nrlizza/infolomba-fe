@@ -43,13 +43,13 @@ const handleLogin = async () => {
 </script>
 
 <template>
-    <section class="bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen flex items-center justify-center px-4">
+    <section class="bg-gradient-to-b from-blue-50 to-white min-h-screen flex items-center justify-center px-4">
         <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6 border border-gray-100 relative">
 
             <!-- Back Button -->
             <button
                 @click="router.push('/beranda')"
-                class="absolute top-4 left-4 flex items-center gap-2 text-gray-500 hover:text-slate-800 transition-colors group"
+                class="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-[#4954DE] transition-colors group"
             >
                 <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -59,7 +59,7 @@ const handleLogin = async () => {
 
             <!-- Header -->
             <div class="text-center space-y-2 pt-4">
-                <div class="inline-flex items-center justify-center w-14 h-14 bg-slate-800 text-white rounded-xl">
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-[#4954DE] text-white rounded-xl">
                     <font-awesome-icon icon="shield-halved" class="text-2xl" />
                 </div>
                 <h2 class="text-xl font-bold text-gray-800">Admin Panel</h2>
@@ -108,13 +108,11 @@ const handleLogin = async () => {
                 </div>
 
                 <!-- Submit -->
-                <fwb-button
-                    type="submit"
-                    size="lg"
-                    class="w-full flex justify-center items-center gap-2 !bg-slate-800 hover:!bg-slate-700"
-                >
-                    <font-awesome-icon icon="right-to-bracket" />
-                    Masuk sebagai Admin
+              <fwb-button type="submit" color="blue" size="lg" class="w-full flex justify-center items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <font-awesome-icon icon="sign-in-alt" />
+                        Masuk
+                    </div>
                 </fwb-button>
             </form>
 

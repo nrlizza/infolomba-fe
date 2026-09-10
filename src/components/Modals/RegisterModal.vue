@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { FwbInput, FwbSelect, FwbButton } from "flowbite-vue";
 import { useTaskStore } from "@/stores/Taskstore";
 import DatePicker from "@/components/Ui/FormInput/DatePicker.vue";
@@ -34,6 +34,7 @@ const pendidikanOptions = [
 
 const showPassword = ref(false);
 const togglePassword = () => (showPassword.value = !showPassword.value);
+const passwordValid = computed(() => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(form.value.password));
 
 const handleRegister = async () => {
     const requiredFields = [
@@ -53,6 +54,14 @@ const handleRegister = async () => {
             icon: "warning",
             title: "Data belum lengkap",
             text: `Field "${emptyField.label}" harus diisi.`,
+            confirmButtonText: "OK",
+        });
+    }
+    if (!passwordValid.value) {
+        return Swal.fire({
+            icon: "warning",
+            title: "Password belum valid",
+            text: "Password harus minimal 8 karakter dan memiliki huruf besar, huruf kecil, angka, serta simbol.",
             confirmButtonText: "OK",
         });
     }
@@ -121,15 +130,15 @@ onUnmounted(() => {
     class="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 animate-fade-in overflow-y-auto py-8"
     @click="handleBackdropClick"
   >
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-8 animate-scale-in relative my-auto">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-8  animate-scale-in relative my-auto">
           <button
               @click="emit('close')"
-              class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors z-10"
-              aria-label="Tutup"
+              class="absolute top-4 left-4 flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors z-10"
           >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
+              Kembali
           </button>
 
           <div class="flex flex-col items-center mb-6">
@@ -139,9 +148,10 @@ onUnmounted(() => {
               <h2 class="text-lg font-semibold text-center text-gray-800 mt-3">Daftar InfoLomba</h2>
           </div>
 
-          <form @submit.prevent="handleRegister" class="space-y-6">
+          <form @submit.prevent="handleRegister" class="required-form space-y-6">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <fwb-input 
+                      class="required-field"
                       v-model="form.name" 
                       label="Nama Lengkap" 
                       placeholder="Masukkan nama lengkap" 
@@ -153,17 +163,10 @@ onUnmounted(() => {
                       </template>
                   </fwb-input>
 
-                  <DatePicker 
-                      class="bg-white w-full"
-                      v-model="form.tanggal_lahir" 
-                      :id="'tanggal_lahir'" 
-                      label="Tanggal Lahir" 
-                      max-date="true" 
-                      required
-                      autocomplete="off"
-                  />
+                  <DatePicker v-model="form.tanggal_lahir" label="Tanggal Lahir" max-date required />
 
                   <fwb-input 
+                      class="required-field"
                       v-model="form.email" 
                       type="email" 
                       label="Email" 
@@ -177,6 +180,7 @@ onUnmounted(() => {
                   </fwb-input>
 
                   <fwb-input 
+                      class="required-field"
                       v-model="form.nomor_telephone" 
                       type="tel" 
                       label="Nomor Telepon" 
@@ -189,17 +193,22 @@ onUnmounted(() => {
                       </template>
                   </fwb-input>
 
-                  <fwb-select 
-                      class="fwb-select"
-                      v-model="form.id_pendidikan" 
-                      label="Tingkat Pendidikan" 
-                      :options="pendidikanOptions" 
-                      placement="bottom-start" 
-                      append-to-body 
-                      required
-                  />
+                  <div class="education-select">
+                      <label class="required-label block mb-2 text-sm font-medium text-gray-900">
+                          Tingkat Pendidikan <span class="text-red-500">*</span>
+                      </label>
+                      <fwb-select
+                          class="w-full"
+                          v-model="form.id_pendidikan"
+                          :options="pendidikanOptions"
+                          placement="bottom-start"
+                          append-to-body
+                          required
+                      />
+                  </div>
 
                   <fwb-input 
+                      class="required-field"
                       v-model="form.nama_instansi" 
                       label="Nama Instansi" 
                       placeholder="Masukkan nama instansi/sekolah" 
@@ -212,6 +221,7 @@ onUnmounted(() => {
                   </fwb-input>
 
                   <fwb-input 
+                      class="required-field"
                       v-model="form.username" 
                       label="Username" 
                       placeholder="Masukkan username" 
@@ -223,7 +233,7 @@ onUnmounted(() => {
                       </template>
                   </fwb-input>
 
-                  <div class="relative">
+                  <div class="relative required-field">
                       <fwb-input 
                           v-model="form.password" 
                           label="Password"
@@ -239,6 +249,9 @@ onUnmounted(() => {
                       <button type="button" @click="togglePassword" class="absolute top-8.5 right-3 text-gray-400">
                           <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
                       </button>
+                      <p v-if="form.password && !passwordValid" class="mt-1 text-xs text-red-600">
+                          Password minimal 8 karakter, dengan huruf besar, huruf kecil, angka, dan simbol.
+                      </p>
                   </div>
               </div>
 
@@ -283,5 +296,14 @@ onUnmounted(() => {
 
 .animate-scale-in {
     animation: scale-in 0.3s ease-out;
+}
+
+.required-form :deep(label:not(.required-label))::after {
+    content: " *";
+    color: #ef4444;
+}
+
+.education-select :deep(label)::after {
+    content: none !important;
 }
 </style>

@@ -48,22 +48,22 @@ function goToDetail(id) {
 </script>
 
 <template>
-    <div class="min-h-full bg-slate-50/50 py-6 px-4 md:px-6">
+    <div class="min-h-full bg-slate-50/50 py-6 px-4 sm:px-6">
         <!-- HEADER -->
-        <div class="max-w-7xl mx-auto mb-6">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 text-center relative overflow-hidden">
+        <div class="max-w-6xl 2xl:max-w-[1400px] mx-auto mb-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-5 text-center relative overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-transparent to-transparent"></div>
-                <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-1 relative z-10">
+                <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-1 relative z-10">
                     RIWAYAT <span class="text-indigo-600">LOMBA</span>
                 </h1>
-                <p class="text-slate-500 text-sm md:text-base max-w-2xl mx-auto relative z-10">
+                <p class="text-slate-500 text-sm sm:text-base max-w-2xl mx-auto relative z-10">
                     Kelola dan pantau semua kompetisi yang telah Anda ikuti.
                 </p>
             </div>
         </div>
 
         <!-- MAIN CONTENT AREA -->
-        <div class="max-w-7xl mx-auto">
+        <div class="max-w-6xl 2xl:max-w-[1400px] mx-auto">
             <!-- Loading -->
             <div v-if="isLoading" class="flex flex-col items-center justify-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
                 <div class="w-10 h-10 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin mb-3"></div>
@@ -82,7 +82,7 @@ function goToDetail(id) {
                     <p class="text-sm text-slate-500 mb-6 leading-relaxed">
                         Silakan login terlebih dahulu untuk melihat dan mengelola riwayat kompetisi yang Anda ikuti.
                     </p>
-                    <FwbButton color="blue" size="lg" class="w-full md:w-auto px-8 shadow-lg shadow-indigo-200" @click="router.push('/login')">
+                    <FwbButton color="blue" size="lg" class="w-full md:w-auto px-8 shadow-lg shadow-indigo-200" @click="window.dispatchEvent(new CustomEvent('open-auth-modal', { detail: 'login' }))">
                         Login Sekarang
                     </FwbButton>
                 </div>
@@ -103,15 +103,15 @@ function goToDetail(id) {
             </div>
 
             <!-- List Display -->
-            <div v-else class="space-y-6">
+            <div v-else class="space-y-4 sm:space-y-6">
                 <div v-for="(lomba, index) in lombaList" :key="index"
-                    class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                    class="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 sm:gap-6">
                         <!-- LEFT -->
-                        <div class="flex-1 space-y-4">
+                        <div class="flex-1 space-y-3 sm:space-y-4">
                             <!-- Judul + Badge -->
-                            <div class="flex flex-wrap items-center gap-3">
-                                <h2 class="text-xl font-bold text-slate-800">
+                            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                                <h2 class="text-lg sm:text-xl font-bold text-slate-800">
                                     {{ lomba.nama_lomba }}
                                 </h2>
 
