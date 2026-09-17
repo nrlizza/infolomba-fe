@@ -3,11 +3,8 @@ import { computed, ref } from 'vue'
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
-  label: { type: String, default: 'Tanggal' },
-  id: { type: String, default: 'datepicker' },
-  minDate: { type: Boolean, default: false },
-  maxDate: { type: Boolean, default: false },
-  required: { type: Boolean, default: false }
+  label: { type: String, default: 'Tanggal Lahir' },
+  required: { type: Boolean, default: true }
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -19,25 +16,18 @@ const monthShortNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
 const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
 const formatDate = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-const today = () => { const date = new Date(); date.setHours(23, 59, 59, 999); return date }
 const yearRangeStart = computed(() => Math.floor(calendarViewDate.value.getFullYear() / 10) * 10)
 const yearRange = computed(() => Array.from({ length: 10 }, (_, index) => yearRangeStart.value + index))
 const calendarDays = computed(() => {
   const year = calendarViewDate.value.getFullYear()
   const month = calendarViewDate.value.getMonth()
   const startDate = new Date(year, month, 1 - new Date(year, month, 1).getDay())
+  const today = new Date()
+  today.setHours(23, 59, 59, 999)
   return Array.from({ length: 42 }, (_, index) => {
     const date = new Date(startDate)
     date.setDate(startDate.getDate() + index)
-    const isBeforeToday = date < new Date(new Date().setHours(0, 0, 0, 0))
-    const isAfterToday = date > today()
-    return {
-      value: formatDate(date),
-      day: date.getDate(),
-      currentMonth: date.getMonth() === month,
-      selected: props.modelValue === formatDate(date),
-      disabled: (props.minDate && isBeforeToday) || (props.maxDate && isAfterToday)
-    }
+    return { value: formatDate(date), day: date.getDate(), currentMonth: date.getMonth() === month, selected: props.modelValue === formatDate(date), disabled: date > today }
   })
 })
 
@@ -56,10 +46,10 @@ const openCalendar = () => {
 
 <template>
   <div class="relative">
-    <label :for="id" class="block mb-2 text-sm font-medium text-gray-900">{{ label }}</label>
-    <button :id="id" type="button" class="flex w-full items-center gap-3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-left text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500" @click="openCalendar">
-      <svg class="h-4 w-4 flex-shrink-0 text-gray-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 0 1 2H5a1 1 0 0 0-1-2Z" /></svg>
-      <span :class="modelValue ? 'text-gray-900' : 'text-gray-400'">{{ modelValue || (label === 'Tanggal Lahir' ? 'Pilih tanggal lahir' : 'Pilih tanggal') }}</span>
+    <label class="block mb-2 text-sm font-medium text-gray-900">{{ label }}</label>
+    <button type="button" class="flex w-full items-center gap-3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-left text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500" @click="openCalendar">
+      <svg class="h-4 w-4 flex-shrink-0 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 0 1 2H5a1 1 0 0 0-1-2Z" /></svg>
+      <span :class="modelValue ? 'text-gray-900' : 'text-gray-400'">{{ modelValue || 'Pilih tanggal lahir' }}</span>
     </button>
     <div v-if="calendarOpen" class="absolute left-0 top-full z-[10001] mt-2 w-[280px] rounded-lg bg-white p-4 shadow-xl ring-1 ring-black/5" @click.stop>
       <div class="mb-4 flex items-center justify-between">

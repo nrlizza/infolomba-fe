@@ -69,8 +69,8 @@ const goToPoinLomba = () => {
 
           <div class="flex flex-col sm:flex-row gap-4 pt-4">
             <button @click="goToInfoLomba"
-              class="group relative flex items-center justify-center gap-3 bg-white text-[#4657B5] px-8 py-4 rounded-full font-bold text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden w-full sm:w-auto">
-              <div class="absolute inset-0 bg-gradient-to-r from-white via-blue-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              class="group relative flex items-center justify-center gap-3 bg-white text-[#4657B5] px-8 py-4 rounded-full font-bold text-base shadow-xl hover:shadow-2xl border-2 border-[#FFD277] transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden w-full sm:w-auto">
+              <div class="absolute inset-0 bg-gradient-to-r from-white via-blue-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 "></div>
               <span class="relative text-xl">🔍</span>
               <span class="relative">JELAJAHI LOMBA</span>
               <svg class="relative w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
