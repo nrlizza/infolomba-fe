@@ -33,11 +33,6 @@ if (decoded?.role?.toUpperCase() === 'ADMIN') {
         icon: ClipboardListIcon,
         name: "Riwayat Validasi",
         path: "/admin-riwayat"
-    },
-    {
-        icon: ChatBubbleIcon,
-        name: "Chat Panitia",
-        path: "/admin-chat"
     });
 } else if (decoded?.role?.toUpperCase() === 'PANITIA') {
     menuGroups[0].items.push(...Admin);

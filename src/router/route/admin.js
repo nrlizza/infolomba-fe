@@ -18,15 +18,5 @@ export const admin = [
       layout: "admin"
     },
     component: () => import("@/views/Admin/RiwayatAdmin.vue"),
-  },
-  {
-    path: "/admin-chat",
-    name: "Chat Panitia Admin",
-    meta: {
-      requiresAuth: true,
-      allowedRoles: ['ADMIN'],
-      layout: "admin"
-    },
-    component: () => import("@/views/Admin/ChatAdmin.vue"),
   }
 ];

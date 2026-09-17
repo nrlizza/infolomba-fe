@@ -112,8 +112,8 @@ const handleRegister = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-blue-50 px-4">
-      <div class="bg-white rounded-2xl shadow-lg w-full max-w-3xl p-8 overflow-visible relative">
+  <div class="min-h-screen flex items-center justify-center bg-blue-50 px-4 py-4">
+      <div class="bg-white rounded-2xl shadow-lg w-full max-w-3xl p-5 md:p-6 overflow-visible relative">
           <button
               @click="router.push('/beranda')"
               class="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors group z-10"
@@ -128,12 +128,12 @@ const handleRegister = async () => {
               <div class="bg-blue-600 text-white p-3 rounded-xl">
                   <font-awesome-icon icon="user-tie" class="text-xl" />
               </div>
-              <h2 class="text-lg font-bold text-center text-gray-800 mb-5 mt-2">Daftar sebagai Panitia</h2>
+              <h2 class="text-lg font-bold text-center text-gray-800 mb-3 mt-2">Daftar sebagai Panitia</h2>
           </div>
 
           <!-- Form -->
-          <form @submit.prevent="handleRegister" class="required-form space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form @submit.prevent="handleRegister" class="required-form space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
                   <!-- Nama -->
                   <fwb-input 
                       class="required-field"
@@ -284,7 +284,7 @@ const handleRegister = async () => {
               <!-- Link ke Login -->
               <p class="text-sm text-center text-gray-600">
                   Sudah punya akun?
-                  <router-link to="/panitia-login" class="text-[#4954DE] font-bold hover:underline">Masuk di sini</router-link>
+                  <router-link to="/panitia-login" class="text-[#1D4ED8] font-bold hover:underline">Masuk di sini</router-link>
               </p>
           </form>
       </div>

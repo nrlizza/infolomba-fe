@@ -59,7 +59,7 @@ const handleLogin = async () => {
 
             <!-- Header -->
             <div class="text-center space-y-2 pt-4">
-                <div class="inline-flex items-center justify-center w-14 h-14 bg-[#4954DE] text-white rounded-xl">
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-[#1D4ED8] text-white rounded-xl">
                     <font-awesome-icon icon="shield-halved" class="text-2xl" />
                 </div>
                 <h2 class="text-xl font-bold text-gray-800">Admin Panel</h2>

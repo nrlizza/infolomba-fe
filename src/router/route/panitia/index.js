@@ -38,15 +38,5 @@ export const panitia = [
       layout: "admin"
     },
     component: () => import("@/views/Panitia/DaftarPesertaLomba.vue"),
-  },
-  {
-    path: "/panitia-chat",
-    name: "Chat Admin",
-    meta: {
-      requiresAuth: true,
-      allowedRoles: ['ADMIN', 'PANITIA'],
-      layout: "admin"
-    },
-    component: () => import("@/views/Panitia/ChatPanitia.vue"),
-  },
+  }
 ];

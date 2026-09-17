@@ -142,10 +142,11 @@ const submitLomba = async () => {
             });
         },
         onError: (error) => {
+            const errorMessage = error.response?.data?.message || error.message || error;
             Swal.fire({
                 icon: "error",
                 title: "Gagal",
-                text: `Gagal submit lomba: ${error.message || error}`,
+                text: `Gagal submit lomba: ${errorMessage}`,
             });
         },
     });

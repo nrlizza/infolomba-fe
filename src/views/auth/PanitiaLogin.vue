@@ -58,7 +58,7 @@ const handleLogin = async () => {
             </button>
             
             <div class="text-center space-y-2 mt-4">
-                <div class="inline-flex items-center justify-center w-14 h-14 bg-[#4954DE] text-white rounded-xl">
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-[#1D4ED8] text-white rounded-xl">
                     <font-awesome-icon icon="user-tie" class="text-2xl" />
                 </div>
                 <h2 class="text-lg font-bold text-gray-800">Login Panitia</h2>
@@ -99,14 +99,14 @@ const handleLogin = async () => {
 
                 <!-- Divider & Register -->
                 <div class="flex items-center gap-3 my-3">
-                    <hr class="flex-grow border-[#4954DE]" />
-                    <span class="text-xs text-[#4954DE]">atau</span>
-                    <hr class="flex-grow border-[#4954DE]" />
+                    <hr class="flex-grow border-[#1D4ED8]" />
+                    <span class="text-xs text-[#1D4ED8]">atau</span>
+                    <hr class="flex-grow border-[#1D4ED8]" />
                 </div>
                 
                 <p class="text-sm text-center text-gray-600">
                     Belum punya akun?
-                    <router-link to="/panitia-register" class="text-[#4954DE] font-semibold hover:underline">Daftar sekarang</router-link>
+                    <router-link to="/panitia-register" class="text-[#1D4ED8] font-semibold hover:underline">Daftar sekarang</router-link>
                 </p>
             </form>
         </div>

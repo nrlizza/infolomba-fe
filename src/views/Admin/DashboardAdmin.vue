@@ -145,13 +145,13 @@ const prevPage = () => {
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <!-- Left -->
               <div class="flex-1">
-                <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
-                  <h2 class="text-lg sm:text-xl font-bold text-white break-words">
+                <div class="mb-4">
+                  <h2 class="text-lg sm:text-xl font-bold text-white leading-relaxed break-words inline-block">
                     {{ lomba.nama_lomba }}
+                    <span v-if="lomba.status_lomba === 'PENDING'" class="inline-block align-middle ml-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded">PENDING</span>
+                    <span v-else-if="lomba.status_lomba === 'APPROVED'" class="inline-block align-middle ml-2 bg-green-400 text-green-900 text-xs font-bold px-2 py-1 rounded">APPROVED</span>
+                    <span v-else-if="lomba.status_lomba === 'REJECTED'" class="inline-block align-middle ml-2 bg-red-400 text-red-900 text-xs font-bold px-2 py-1 rounded">REJECTED</span>
                   </h2>
-                  <span v-if="lomba.status_lomba === 'PENDING'" class="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded">PENDING</span>
-                  <span v-else-if="lomba.status_lomba === 'APPROVED'" class="bg-green-400 text-green-900 text-xs font-bold px-2 py-1 rounded">APPROVED</span>
-                  <span v-else-if="lomba.status_lomba === 'REJECTED'" class="bg-red-400 text-red-900 text-xs font-bold px-2 py-1 rounded">REJECTED</span>
                 </div>
 
                 <div v-if="lomba.alasan_penolakan" class="mb-4 bg-red-500 bg-opacity-20 p-3 rounded-lg border border-red-300">
@@ -173,26 +173,26 @@ const prevPage = () => {
               </div>
 
               <!-- Right Section - Buttons -->
-              <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto" v-if="lomba.status_lomba === 'PENDING'">
-                <FwbButton size="lg" class="w-full sm:w-auto sm:min-w-[120px] bg-blue-500 hover:bg-blue-600"
+              <div class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto mt-4 lg:mt-0" v-if="lomba.status_lomba === 'PENDING'">
+                <FwbButton size="sm" class="w-full sm:w-auto sm:min-w-[90px] bg-blue-500 hover:bg-blue-600"
                   @click="router.push(`/detail-lomba/${lomba.id_lomba}`)">
                   <template #prefix>
-                    <font-awesome-icon icon="eye" class="text-white mr-2" />
+                    <font-awesome-icon icon="eye" class="text-white mr-1" />
                   </template>
                   Detail
                 </FwbButton>
 
-                <FwbButton size="lg" class="w-full sm:w-auto sm:min-w-[120px] bg-green-500 hover:bg-green-600"
+                <FwbButton size="sm" class="w-full sm:w-auto sm:min-w-[90px] bg-green-500 hover:bg-green-600"
                   @click="openActionModal(lomba, 'APPROVED')">
                   <template #prefix>
-                    <font-awesome-icon icon="check" class="text-white mr-2" />
+                    <font-awesome-icon icon="check" class="text-white mr-1" />
                   </template>
                   Setujui
                 </FwbButton>
 
-                <FwbButton size="lg" class="w-full sm:w-auto sm:min-w-[120px] bg-red-600 hover:bg-red-700" @click="openActionModal(lomba, 'REJECTED')">
+                <FwbButton size="sm" class="w-full sm:w-auto sm:min-w-[90px] bg-red-600 hover:bg-red-700" @click="openActionModal(lomba, 'REJECTED')">
                   <template #prefix>
-                    <font-awesome-icon icon="xmark" class="text-white mr-2" />
+                    <font-awesome-icon icon="xmark" class="text-white mr-1" />
                   </template>
                   Tolak
                 </FwbButton>
