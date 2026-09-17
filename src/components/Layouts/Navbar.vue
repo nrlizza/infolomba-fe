@@ -8,7 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import avatar from '@/assets/avatar.jpg'
 import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon, PresentationChart, ListIcon } from "../Icons";
-import Navbar from '@/assets/logo.svg'
+import Navbar from '@/assets/Navbar.svg'
 import LoginModal from '@/components/Modals/LoginModal.vue'
 import RegisterModal from '@/components/Modals/RegisterModal.vue'
 
@@ -80,7 +80,7 @@ onUnmounted(() => {
         to="/beranda" 
         class="flex items-center transition-transform duration-300 hover:scale-105 active:scale-95"
       >
-        <img :src="Navbar" alt="Logo" class="block h-8 sm:h-11 lg:h-12 w-auto max-w-[90px] sm:max-w-[140px] object-contain" />
+        <img :src="Navbar" alt="Logo" class="block h-6 sm:h-7 lg:h-8 w-auto max-w-[70px] sm:max-w-[100px] object-contain" />
       </router-link>
 
       <!-- Center Links (Desktop) -->
