@@ -390,21 +390,28 @@ export function useAllLombaPeserta(payload) {
     });
 }
 
-export function useAllLombaAdmin(page = 1, limit = 10, status = '') {
+export function useAllLombaAdmin(page = 1, limit = 10, filters = {}) {
     return useQuery({
         queryKey: computed(() => {
             const pageValue = page.value || page;
             const limitValue = limit.value || limit;
-            const statusValue = status.value || status;
-            return ["all-lomba-admin", pageValue, limitValue, statusValue];
+            const filterValue = filters.value || filters;
+            return ["all-lomba-admin", pageValue, limitValue, filterValue];
         }),
         queryFn: async () => {
             const params = {
                 page: page.value || page,
                 limit: limit.value || limit,
             };
-            if (status.value || status) {
-                params.status_lomba = status.value || status;
+            const f = filters.value || filters;
+            if (typeof f === 'string') {
+                if (f) params.status_lomba = f;
+            } else if (f && typeof f === 'object') {
+                if (f.status_lomba) params.status_lomba = f.status_lomba;
+                if (f.id_kategori) params.id_kategori = f.id_kategori;
+                if (f.id_pendidikan) params.id_pendidikan = f.id_pendidikan;
+                if (f.id_jenis) params.id_jenis = f.id_jenis;
+                if (f.search) params.search = f.search;
             }
 
             const res = await AxiosInstance.get(`lomba/admin/all`, { params });

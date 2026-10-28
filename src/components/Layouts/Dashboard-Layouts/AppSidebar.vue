@@ -25,14 +25,9 @@ const menuGroups = [
 
 if (decoded?.role?.toUpperCase() === 'ADMIN') {
     menuGroups[0].items.push({
-        icon: PresentationChart,
-        name: "Dashboard",
-        path: "/admin-dashboard"
-    },
-    {
         icon: ClipboardListIcon,
-        name: "Riwayat Validasi",
-        path: "/admin-riwayat"
+        name: "Aktivitas & Validasi Lomba",
+        path: "/admin-dashboard"
     });
 } else if (decoded?.role?.toUpperCase() === 'PANITIA') {
     menuGroups[0].items.push(...Admin);
