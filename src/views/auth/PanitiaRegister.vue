@@ -47,7 +47,7 @@ const handleRegister = async () => {
         { key: "id_pendidikan", label: "Tingkat Pendidikan" },
         { key: "jabatan_panitia", label: "Jabatan Panitia" },
         { key: "nama_instansi", label: "Nama Instansi" },
-        { key: "bukti_kepanitiaan", label: "Bukti Surat Kepanitiaan" },
+        { key: "bukti_kepanitiaan", label: "Bukti Proposal Lomba" },
         { key: "username", label: "Username" },
         { key: "password", label: "Password" },
     ];
@@ -224,12 +224,12 @@ const handleRegister = async () => {
                       </template>
                   </fwb-input>
 
-                  <!-- Bukti Surat Kepanitiaan -->
+                  <!-- Bukti Proposal Lomba -->
                   <fwb-input 
                       class="required-field"
                       v-model="form.bukti_kepanitiaan" 
-                      label="Bukti Surat Kepanitiaan" 
-                      placeholder="Masukkan link Google Drive dll" 
+                      label="Bukti Proposal Lomba" 
+                      placeholder="Masukkan link Google Drive" 
                       required 
                       autocomplete="off"
                   >

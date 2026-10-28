@@ -4,10 +4,10 @@ import { FwbButton, FwbSpinner } from 'flowbite-vue'
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { useRouter } from 'vue-router'
 import Card from '@/components/Ui/Card.vue'
-import Swal from "sweetalert2"
 import cookie from 'vue-cookies'
 import { jwtDecode } from 'jwt-decode'
 import { useAllLombaByIdUser } from '@/composables/tanstack-query/useQuery'
+import ikonDitolak from '@/assets/ikon ditolak.png'
 
 // ===== ambil user dari token =====
 const token = cookie.get('token')
@@ -21,19 +21,31 @@ const payload = ref({
 })
 
 // ===== query =====
-const { data, isLoading, } = useAllLombaByIdUser(payload)
+const { data, isLoading } = useAllLombaByIdUser(payload)
 
 const router = useRouter()
 
-const goToDetail = (id) => {
-  router.push(`/riwayat-daftar-peserta/${id}`)
+// Modal State Alasan Penolakan
+const showRejectModal = ref(false)
+const selectedRejectedLomba = ref(null)
+
+const handleDetail = (lomba) => {
+  if (lomba.status_lomba === 'REJECTED') {
+    selectedRejectedLomba.value = lomba
+    showRejectModal.value = true
+  } else {
+    router.push(`/riwayat-daftar-peserta/${lomba.id_lomba}`)
+  }
+}
+
+const closeRejectModal = () => {
+  showRejectModal.value = false
+  selectedRejectedLomba.value = null
 }
 
 const goToEdit = (id) => {
   router.push(`/edit-lomba/${id}`)
 }
-
-
 
 // ===== pagination helpers =====
 const pagination = computed(() => data.value?.pagination ?? {})
@@ -134,7 +146,7 @@ const prevPage = () => {
 
             <!-- Right Section - Buttons -->
             <div class="flex flex-wrap gap-3">
-              <FwbButton color="light" size="lg" class="min-w-[120px]" @click="goToDetail(lomba.id_lomba)">
+              <FwbButton color="light" size="lg" class="min-w-[120px]" @click="handleDetail(lomba)">
                 <template #prefix>
                   <font-awesome-icon icon="circle-exclamation" class="text-black" />
                 </template>
@@ -169,6 +181,128 @@ const prevPage = () => {
       </div>
 
     </div>
+
+    <!-- Modal Pop-up Alasan Penolakan Lomba (Design matching custom mockup) -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="showRejectModal"
+          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-[2px]"
+          @click.self="closeRejectModal"
+        >
+          <Transition
+            enter-active-class="transition duration-250 ease-out"
+            enter-from-class="opacity-0 scale-95"
+            enter-to-class="opacity-100 scale-100"
+            leave-active-class="transition duration-150 ease-in"
+            leave-from-class="opacity-100 scale-100"
+            leave-to-class="opacity-0 scale-95"
+          >
+            <div
+              v-if="showRejectModal"
+              class="relative w-full max-w-[420px] bg-white rounded-[32px] overflow-hidden shadow-2xl"
+            >
+              <!-- Header Illustration Container -->
+              <div class="relative h-[220px] w-full overflow-hidden bg-gradient-to-br from-[#122372] via-[#1c2e8c] to-[#2b419e]">
+                <!-- Decorative Background SVG -->
+                <svg
+                  class="absolute inset-0 w-full h-full pointer-events-none"
+                  viewBox="0 0 420 220"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  preserveAspectRatio="none"
+                >
+                  <!-- Squiggle Upper Left -->
+                  <path d="M 12 36 Q 22 24 34 36 T 56 36 T 76 28" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.9" />
+                  
+                  <!-- Coral Circle Left -->
+                  <ellipse cx="25" cy="115" rx="55" ry="50" fill="#fa7060" />
+                  
+                  <!-- Dot Grid Left -->
+                  <g fill="#4d6bdb" opacity="0.95">
+                    <circle cx="85" cy="74" r="3" />
+                    <circle cx="98" cy="74" r="3" />
+                    <circle cx="111" cy="74" r="3" />
+                    <circle cx="85" cy="87" r="3" />
+                    <circle cx="98" cy="87" r="3" />
+                    <circle cx="111" cy="87" r="3" />
+                    <circle cx="85" cy="100" r="3" />
+                    <circle cx="98" cy="100" r="3" />
+                    <circle cx="111" cy="100" r="3" />
+                  </g>
+                  
+                  <!-- Spark/Burst Lines Behind Envelope (Left) -->
+                  <g stroke="#fa5252" stroke-width="3.5" stroke-linecap="round">
+                    <line x1="150" y1="52" x2="136" y2="40" />
+                    <line x1="144" y1="70" x2="128" y2="66" />
+                    <line x1="148" y1="88" x2="132" y2="92" />
+                  </g>
+
+                  <!-- Right Side Dark Overlays -->
+                  <circle cx="410" cy="40" r="110" fill="#1b2a75" opacity="0.65" />
+                  <circle cx="390" cy="10" r="85" fill="#152161" opacity="0.75" />
+                  
+                  <!-- Floating Coral Dot Right -->
+                  <circle cx="310" cy="72" r="9" fill="#fa7060" />
+                  
+                  <!-- Floating Soft Blue Circle Right -->
+                  <circle cx="350" cy="120" r="28" fill="#7fa4f7" opacity="0.6" />
+                  
+                  <!-- Soft Coral Halo Behind Envelope -->
+                  <ellipse cx="215" cy="120" rx="58" ry="48" fill="#fbb6b1" opacity="0.7" />
+
+                  <!-- Bottom Wave Curve (White) matching user screenshot -->
+                  <path d="M 0 162 C 40 120 95 115 145 138 C 195 160 235 172 290 156 C 345 140 385 125 420 135 L 420 225 L 0 225 Z" fill="#ffffff" />
+                </svg>
+
+                <!-- Close Button (Top Right) -->
+                <button
+                  type="button"
+                  aria-label="Tutup"
+                  class="absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+                  @click="closeRejectModal"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                <!-- Center Icon -->
+                <div class="absolute inset-x-0 bottom-2 flex justify-center z-10 pointer-events-none">
+                  <img :src="ikonDitolak" alt="Ditolak" class="w-32 h-32 sm:w-36 sm:h-36 object-contain drop-shadow-md" />
+                </div>
+              </div>
+
+              <!-- Modal Content -->
+              <div class="px-6 pt-3 pb-8 text-center">
+                <h3 class="text-2xl font-extrabold text-[#111827] tracking-tight leading-snug">
+                  Pengajuan Lomba Ditolak
+                </h3>
+                <p class="text-xl font-bold text-[#111827] mt-0.5 break-words">
+                  {{ selectedRejectedLomba?.nama_lomba }}
+                </p>
+
+                <div class="mt-6">
+                  <p class="text-sm font-medium text-gray-500">
+                    Alasan Penolakan dari Admin:
+                  </p>
+                  <p class="text-base font-semibold text-gray-800 mt-1 px-4 leading-relaxed break-words">
+                    {{ selectedRejectedLomba?.alasan_penolakan || 'Tidak ada catatan alasan penolakan yang dilampirkan oleh admin.' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </div>
+      </Transition>
+    </Teleport>
 
   </Card>
 </template>

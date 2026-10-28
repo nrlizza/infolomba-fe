@@ -80,11 +80,10 @@ const endTransition = (el) => {
         ]"
     >
         <!-- Logo -->
-        <div :class="['py-2 flex', !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start']">
-            <router-link to="/beranda">
+        <div :class="['py-4 px-2 flex items-center', !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start']">
+            <router-link to="/dashboard-panitia">
                 <div class="flex items-center">
-                    <!-- <img class="rounded-full" src="/logo.svg" alt="Logo" width="80" height="80" /> -->
-                    <img :src="Navbar" alt="InfoLomba Logo" class="h-14" />
+                    <img :src="Navbar" alt="EDVENT Logo" class="h-9 w-auto max-w-[130px] object-contain" />
                 </div>
             </router-link>
         </div>

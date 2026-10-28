@@ -58,10 +58,9 @@ const toggleApplicationMenu = () => {
                 </button>
 
                 <div class="flex items-center gap-3">
-                    <HeaderLogo />
-                    <span v-if="hideToggle" class="hidden sm:inline-block bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-0.5 rounded">
-                        Portal Admin
-                    </span>
+                    <!-- Hanya tampil di header jika hideToggle (Admin tanpa sidebar) atau mobile (lg:hidden) jika ada sidebar -->
+                    <HeaderLogo :class="{ 'lg:hidden': !hideToggle }" />
+                   
                 </div>
             </div>
             

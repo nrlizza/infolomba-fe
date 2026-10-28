@@ -10,6 +10,16 @@ export const admin = [
     component: () => import("@/views/Admin/DashboardAdmin.vue"),
   },
   {
+    path: "/admin-detail/:id_lomba",
+    name: "Detail Lomba Admin",
+    meta: {
+      requiresAuth: true,
+      allowedRoles: ['ADMIN'],
+      layout: "admin"
+    },
+    component: () => import("@/views/Admin/DetailLombaAdmin.vue"),
+  },
+  {
     path: "/admin-riwayat",
     name: "Riwayat Validasi Admin",
     meta: {

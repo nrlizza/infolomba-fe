@@ -36,9 +36,6 @@ const filters = ref({
 })
 
 const searchInput = ref('')
-const selectedIds = ref([])
-const selectAll = ref(false)
-
 const payload = ref({
   page: 1,
   limit: 10
@@ -93,15 +90,6 @@ watch(
   }
 )
 
-// Select All checkbox
-watch(selectAll, (newVal) => {
-  if (newVal) {
-    selectedIds.value = lombaList.value.map((item) => item.id_lomba)
-  } else {
-    selectedIds.value = []
-  }
-})
-
 // Pagination
 const nextPage = () => {
   if (payload.value.page < (pagination.value.totalPages || 1)) {
@@ -114,6 +102,33 @@ const prevPage = () => {
     payload.value.page--
   }
 }
+
+const goToPage = (page) => {
+  if (page >= 1 && page <= (pagination.value.totalPages || 1)) {
+    payload.value.page = page
+  }
+}
+
+const visiblePages = computed(() => {
+  const total = pagination.value.totalPages || 1
+  const current = payload.value.page
+  const delta = 2
+  let start = Math.max(1, current - delta)
+  let end = Math.min(total, current + delta)
+
+  if (current <= delta) {
+    end = Math.min(total, 1 + delta * 2)
+  }
+  if (current + delta >= total) {
+    start = Math.max(1, total - delta * 2)
+  }
+
+  const pages = []
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+  return pages
+})
 
 // ===== Approval / Rejection Modal =====
 const handleApprove = (lomba) => {
@@ -215,8 +230,7 @@ const formatDate = (dateStr) => {
     <div class="mb-4">
       <div class="flex items-baseline gap-2">
         <h1 class="text-2xl font-bold text-gray-900">Aktivitas dan Validasi Lomba</h1>
-        <span class="text-sm text-gray-500 font-medium hidden sm:inline">Daftar Aktivitas dan Validasi</span>
-      </div>
+     </div>
     </div>
 
     <!-- Main Container Card -->
@@ -299,7 +313,7 @@ const formatDate = (dateStr) => {
               class="flex-1 bg-white border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 font-semibold text-gray-800"
             >
               <option value="">-- Semua Status --</option>
-              <option value="PENDING">Belum Divalidasi</option>
+              <option value="PENDING">Belum Dikonfirmasi</option>
               <option value="APPROVED">Valid (Disetujui)</option>
               <option value="REJECTED">Tidak Valid (Ditolak)</option>
             </select>
@@ -315,22 +329,15 @@ const formatDate = (dateStr) => {
       <div class="p-4 bg-white flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         <!-- Left: Limit + Search + Buttons -->
         <div class="flex flex-wrap items-center gap-2 flex-1">
-          <select 
-            v-model="payload.limit"
-            class="bg-white border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-700 focus:outline-none"
-          >
-            <option :value="10">10 Baris</option>
-            <option :value="25">25 Baris</option>
-            <option :value="50">50 Baris</option>
-          </select>
+         
 
           <div class="flex items-center flex-1 max-w-md">
             <input 
               type="text" 
               v-model="searchInput"
               @keyup.enter="handleSearch"
-              placeholder="Cari Nama Aktivitas / Penyelenggara..." 
-              class="w-full border border-gray-300 rounded-l px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500"
+              placeholder="Cari Nama Aktivitas / Penyelenggara " 
+              class="w-full border border-gray-300 rounded-l px-3 py-1 text-sm focus:outline-none focus:border-blue-500"
             />
             <button 
               @click="handleSearch"
@@ -376,19 +383,12 @@ const formatDate = (dateStr) => {
           <!-- Table Header: Dark Navy Blue (#004b75) -->
           <thead>
             <tr class="bg-[#004b75] text-white text-xs font-bold uppercase tracking-wider">
-              <th class="p-3 w-10 text-center border-r border-[#003c5e]">
-                <input 
-                  type="checkbox" 
-                  v-model="selectAll"
-                  class="rounded text-blue-600 focus:ring-0 cursor-pointer"
-                />
-              </th>
               <th class="p-3 w-12 text-center border-r border-[#003c5e]">No</th>
               <th class="p-3 min-w-[150px] border-r border-[#003c5e]">Penyelenggara / Instansi</th>
               <th class="p-3 min-w-[280px] border-r border-[#003c5e]">Nama Aktivitas</th>
               <th class="p-3 min-w-[120px] text-center border-r border-[#003c5e]">Tanggal</th>
               <th class="p-3 min-w-[90px] text-center border-r border-[#003c5e]">Biaya</th>
-              <th class="p-3 min-w-[130px] text-center border-r border-[#003c5e]">Status Valid</th>
+              <th class="p-3 min-w-[130px] text-center border-r border-[#003c5e]">Status</th>
               <th class="p-3 w-28 text-center">Aksi</th>
             </tr>
           </thead>
@@ -397,7 +397,7 @@ const formatDate = (dateStr) => {
           <tbody class="divide-y divide-gray-200 bg-white text-gray-800">
             <!-- Loading State -->
             <tr v-if="isLoading">
-              <td colspan="8" class="text-center py-12">
+              <td colspan="7" class="text-center py-12">
                 <fwb-spinner size="10" aria-label="Loading..." class="mx-auto text-[#004b75]" />
                 <p class="text-gray-500 mt-2 font-medium">Memuat data lomba...</p>
               </td>
@@ -405,7 +405,7 @@ const formatDate = (dateStr) => {
 
             <!-- Empty State -->
             <tr v-else-if="lombaList.length === 0">
-              <td colspan="8" class="text-center py-10 text-gray-500">
+              <td colspan="7" class="text-center py-10 text-gray-500">
                 <div class="py-6">
                   <p class="text-base font-semibold text-gray-600">Tidak ada data aktivitas yang sesuai dengan filter.</p>
                   <p class="text-xs text-gray-400 mt-1">Coba sesuaikan pilihan filter di atas atau reset filter.</p>
@@ -420,16 +420,6 @@ const formatDate = (dateStr) => {
               :key="item.id_lomba"
               class="hover:bg-blue-50/50 transition duration-150 border-b border-gray-200"
             >
-              <!-- Checkbox -->
-              <td class="p-3 text-center border-r border-gray-200">
-                <input 
-                  type="checkbox" 
-                  :value="item.id_lomba"
-                  v-model="selectedIds"
-                  class="rounded text-blue-600 focus:ring-0 cursor-pointer"
-                />
-              </td>
-
               <!-- No -->
               <td class="p-3 text-center font-medium text-gray-600 border-r border-gray-200">
                 {{ (payload.page - 1) * payload.limit + index + 1 }}
@@ -437,36 +427,15 @@ const formatDate = (dateStr) => {
 
               <!-- Penyelenggara / Instansi -->
               <td class="p-3 border-r border-gray-200">
-                <div class="font-semibold text-gray-900 leading-tight">
+                <div class="font-semibold text-gray-900">
                   {{ item.institusi_penyelenggara || 'Panitia Lomba' }}
-                </div>
-                <div class="text-xs text-gray-500 mt-0.5">
-                  Telp: {{ item.kontak_penyelenggara || '-' }}
                 </div>
               </td>
 
               <!-- Nama Aktivitas / Lomba -->
               <td class="p-3 border-r border-gray-200">
-                <div class="font-medium text-gray-900 leading-snug">
+                <div class="font-medium text-gray-900">
                   {{ item.nama_lomba }}
-                </div>
-                <div class="text-xs text-gray-500 mt-1.5 flex flex-wrap items-center gap-1.5">
-                  <span v-if="item.kategori_lomba" class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[11px]">
-                    {{ item.kategori_lomba }}
-                  </span>
-                  <span v-if="item.tingkat_pendidikan" class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[11px]">
-                    {{ item.tingkat_pendidikan }}
-                  </span>
-                  <span v-if="item.nama_provinsi" class="bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded text-[11px] font-medium">
-                    📍 {{ item.nama_provinsi }}
-                  </span>
-                  <span v-if="item.format_lomba" class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-[11px]">
-                    {{ item.format_lomba }}
-                  </span>
-                </div>
-                <!-- Catatan Penolakan jika ada -->
-                <div v-if="item.alasan_penolakan" class="mt-1.5 text-xs text-red-600 bg-red-50 p-1.5 rounded border border-red-200">
-                  <span class="font-bold">Alasan Penolakan:</span> {{ item.alasan_penolakan }}
                 </div>
               </td>
 
@@ -493,7 +462,7 @@ const formatDate = (dateStr) => {
                 </div>
                 <div v-else class="inline-flex items-center gap-1 text-amber-700 font-bold text-xs bg-amber-50 px-2.5 py-1 rounded-full border border-amber-300">
                   <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                  <span>Belum Divalidasi</span>
+                  <span>Belum Dikonfirmasi</span>
                 </div>
               </td>
 
@@ -503,33 +472,11 @@ const formatDate = (dateStr) => {
                   <!-- Tombol Detail (Eye Biru Muda) -->
                   <button 
                     type="button"
-                    @click="router.push(`/detail-lomba/${item.id_lomba}`)"
+                    @click="router.push(`/admin-detail/${item.id_lomba}`)"
                     title="Lihat Detail"
                     class="bg-cyan-500 hover:bg-cyan-600 text-white p-1.5 rounded text-xs transition shadow-sm"
                   >
                     <font-awesome-icon icon="eye" class="w-3.5 h-3.5" />
-                  </button>
-
-                  <!-- Tombol Cepat Setujui (Hijau) jika PENDING -->
-                  <button 
-                    v-if="item.status_lomba === 'PENDING'"
-                    type="button"
-                    @click="handleApprove(item)"
-                    title="Setujui Lomba"
-                    class="bg-emerald-600 hover:bg-emerald-700 text-white p-1.5 rounded text-xs transition shadow-sm"
-                  >
-                    <font-awesome-icon icon="check" class="w-3.5 h-3.5" />
-                  </button>
-
-                  <!-- Tombol Cepat Tolak (Oranye) jika PENDING -->
-                  <button 
-                    v-if="item.status_lomba === 'PENDING'"
-                    type="button"
-                    @click="handleReject(item)"
-                    title="Tolak Lomba"
-                    class="bg-amber-500 hover:bg-amber-600 text-white p-1.5 rounded text-xs transition shadow-sm"
-                  >
-                    <font-awesome-icon icon="xmark" class="w-3.5 h-3.5" />
                   </button>
 
                   <!-- Tombol Hapus (Merah) -->
@@ -548,39 +495,86 @@ const formatDate = (dateStr) => {
         </table>
       </div>
 
-      <!-- Footer Pagination -->
-      <div class="p-4 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-600">
-        <div>
-          Menampilkan 
-          <span class="font-bold text-gray-900">{{ lombaList.length > 0 ? (payload.page - 1) * payload.limit + 1 : 0 }}</span> 
-          sampai 
-          <span class="font-bold text-gray-900">{{ Math.min(payload.page * payload.limit, pagination.totalData || 0) }}</span> 
-          dari 
-          <span class="font-bold text-gray-900">{{ pagination.totalData || lombaList.length }}</span> 
-          data
+      <!-- Footer Pagination Persis Screenshot Referensi -->
+      <div class="p-3 bg-white border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-3">
+        <!-- Kiri: Box Info Hal & Jumlah Data + Dropdown Baris -->
+        <div class="flex flex-wrap items-center gap-4">
+          <!-- Box Hal 1/92 (920 data) -->
+          <div class="bg-sky-50 border-l-4 border-sky-400 px-3 py-1.5 text-xs text-sky-900 font-medium rounded-r">
+            Hal {{ payload.page }}/{{ pagination.totalPages || 1 }} ({{ pagination.totalData || lombaList.length }} data)
+          </div>
+
+          <!-- Dropdown Baris -->
+          <select 
+            v-model="payload.limit"
+            class="bg-white border border-gray-300 rounded pl-3 pr-8 py-1.5 text-xs text-gray-700 focus:outline-none focus:border-blue-500 shadow-sm cursor-pointer min-w-[105px]"
+          >
+            <option :value="10">10 baris</option>
+            <option :value="25">15 baris</option>
+            <option :value="50">20 baris</option>
+          </select>
         </div>
 
-        <div class="flex items-center gap-1">
+        <!-- Kanan: Tombol Pagination « < 1 2 3 > » -->
+        <div class="inline-flex items-center -space-x-px text-xs rounded border border-gray-300 overflow-hidden shadow-sm">
+          <!-- First « -->
+          <button 
+            type="button"
+            :disabled="payload.page <= 1"
+            @click="goToPage(1)"
+            class="px-2.5 py-1.5 bg-gray-50 text-gray-500 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed border-r border-gray-300 transition"
+            title="Halaman Pertama"
+          >
+            &laquo;
+          </button>
+
+          <!-- Prev < -->
           <button 
             type="button"
             :disabled="payload.page <= 1"
             @click="prevPage"
-            class="px-3 py-1.5 border border-gray-300 rounded bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-xs font-semibold"
+            class="px-2.5 py-1.5 bg-gray-50 text-gray-500 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed border-r border-gray-300 transition"
+            title="Sebelumnya"
           >
-            Sebelumnya
+            &lsaquo;
           </button>
 
-          <span class="px-3 py-1.5 bg-[#004b75] text-white rounded text-xs font-bold">
-            {{ payload.page }} / {{ pagination.totalPages || 1 }}
-          </span>
+          <!-- Numbered Pages -->
+          <button 
+            v-for="page in visiblePages" 
+            :key="page"
+            type="button"
+            @click="goToPage(page)"
+            :class="[
+              page === payload.page 
+                ? 'bg-[#004b75] text-white font-bold' 
+                : 'bg-white text-gray-700 hover:bg-gray-100',
+              'px-3 py-1.5 border-r border-gray-300 transition'
+            ]"
+          >
+            {{ page }}
+          </button>
 
+          <!-- Next > -->
           <button 
             type="button"
             :disabled="payload.page >= (pagination.totalPages || 1)"
             @click="nextPage"
-            class="px-3 py-1.5 border border-gray-300 rounded bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-xs font-semibold"
+            class="px-2.5 py-1.5 bg-gray-50 text-gray-500 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed border-r border-gray-300 transition"
+            title="Selanjutnya"
           >
-            Selanjutnya
+            &rsaquo;
+          </button>
+
+          <!-- Last » -->
+          <button 
+            type="button"
+            :disabled="payload.page >= (pagination.totalPages || 1)"
+            @click="goToPage(pagination.totalPages || 1)"
+            class="px-2.5 py-1.5 bg-gray-50 text-gray-500 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            title="Halaman Terakhir"
+          >
+            &raquo;
           </button>
         </div>
       </div>
