@@ -395,21 +395,22 @@ export function useAllLombaAdmin(page = 1, limit = 10, filters = {}) {
         queryKey: computed(() => {
             const pageValue = page.value || page;
             const limitValue = limit.value || limit;
-            const filterValue = filters.value || filters;
-            return ["all-lomba-admin", pageValue, limitValue, filterValue];
+            const f = filters.value || (typeof filters === 'function' ? filters() : filters);
+            return ["all-lomba-admin", pageValue, limitValue, JSON.stringify(f)];
         }),
         queryFn: async () => {
             const params = {
                 page: page.value || page,
                 limit: limit.value || limit,
             };
-            const f = filters.value || filters;
+            const f = filters.value || (typeof filters === 'function' ? filters() : filters);
             if (typeof f === 'string') {
                 if (f) params.status_lomba = f;
             } else if (f && typeof f === 'object') {
                 if (f.status_lomba) params.status_lomba = f.status_lomba;
                 if (f.id_kategori) params.id_kategori = f.id_kategori;
                 if (f.id_pendidikan) params.id_pendidikan = f.id_pendidikan;
+                if (f.id_provinsi) params.id_provinsi = f.id_provinsi;
                 if (f.id_jenis) params.id_jenis = f.id_jenis;
                 if (f.search) params.search = f.search;
             }
@@ -421,8 +422,8 @@ export function useAllLombaAdmin(page = 1, limit = 10, filters = {}) {
                 pagination: res.data?.pagination ?? {},
             };
         },
-        keepPreviousData: true,
-        staleTime: 1000 * 60 * 5,
+        keepPreviousData: false,
+        staleTime: 0,
     });
 }
 

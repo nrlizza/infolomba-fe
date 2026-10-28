@@ -8,12 +8,11 @@ import cookie from 'vue-cookies'
 import { jwtDecode } from 'jwt-decode'
 import { 
   useAllLombaAdmin, 
-  useLombaStats, 
   useApproveLomba, 
   useDeleteLomba,
   useAllKategori,
   useAllPendidikan,
-  useAllJenis
+  useAllProvinsi
 } from '@/composables/tanstack-query/useQuery'
 
 const router = useRouter()
@@ -23,7 +22,7 @@ const decoded = token ? jwtDecode(token) : null
 // ===== Queries Master Data =====
 const { data: kategoriData } = useAllKategori()
 const { data: pendidikanData } = useAllPendidikan()
-const { data: jenisData } = useAllJenis()
+const { data: provinsiData } = useAllProvinsi()
 const { mutateAsync: approveLomba } = useApproveLomba()
 const { mutateAsync: deleteLomba } = useDeleteLomba()
 
@@ -32,7 +31,7 @@ const filters = ref({
   status_lomba: '', // '' = Semua Status, PENDING, APPROVED, REJECTED
   id_kategori: '',
   id_pendidikan: '',
-  id_jenis: '',
+  id_provinsi: '',
   search: ''
 })
 
@@ -45,12 +44,12 @@ const payload = ref({
   limit: 10
 })
 
-// Query data lomba admin
+// Query data lomba admin - reactive filter object
 const queryFilters = computed(() => ({
   status_lomba: filters.value.status_lomba,
   id_kategori: filters.value.id_kategori,
   id_pendidikan: filters.value.id_pendidikan,
-  id_jenis: filters.value.id_jenis,
+  id_provinsi: filters.value.id_provinsi,
   search: filters.value.search
 }))
 
@@ -75,15 +74,20 @@ const handleReset = () => {
     status_lomba: '',
     id_kategori: '',
     id_pendidikan: '',
-    id_jenis: '',
+    id_provinsi: '',
     search: ''
   }
   payload.value.page = 1
 }
 
-// Watch filters change
+// Watch filters change to reset pagination
 watch(
-  () => [filters.value.status_lomba, filters.value.id_kategori, filters.value.id_pendidikan, filters.value.id_jenis],
+  () => [
+    filters.value.status_lomba, 
+    filters.value.id_kategori, 
+    filters.value.id_pendidikan, 
+    filters.value.id_provinsi
+  ],
   () => {
     payload.value.page = 1
   }
@@ -225,7 +229,7 @@ const formatDate = (dateStr) => {
       <div class="p-5 border-b border-gray-200">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
           
-          <!-- Kategori Lomba -->
+          <!-- 1. Kategori Lomba -->
           <div class="flex flex-col sm:flex-row sm:items-center">
             <label class="w-full sm:w-44 text-sm font-bold text-amber-700 mb-1 sm:mb-0">
               Kategori Lomba
@@ -237,15 +241,15 @@ const formatDate = (dateStr) => {
               <option value="">-- Semua Kategori Lomba --</option>
               <option 
                 v-for="item in (kategoriData?.data || [])" 
-                :key="item.id_kategori" 
-                :value="item.id_kategori"
+                :key="item.value" 
+                :value="item.value"
               >
-                {{ item.kategori_lomba }}
+                {{ item.name }}
               </option>
             </select>
           </div>
 
-          <!-- Tingkat Pendidikan -->
+          <!-- 2. Tingkat Pendidikan -->
           <div class="flex flex-col sm:flex-row sm:items-center">
             <label class="w-full sm:w-44 text-sm font-bold text-amber-700 mb-1 sm:mb-0">
               Tingkat Pendidikan
@@ -257,35 +261,35 @@ const formatDate = (dateStr) => {
               <option value="">-- Semua Tingkat Pendidikan --</option>
               <option 
                 v-for="item in (pendidikanData?.data || [])" 
-                :key="item.id_pendidikan" 
-                :value="item.id_pendidikan"
+                :key="item.value" 
+                :value="item.value"
               >
-                {{ item.tingkat_pendidikan }}
+                {{ item.name }}
               </option>
             </select>
           </div>
 
-          <!-- Jenis / Format Lomba -->
+          <!-- 3. Provinsi (Menggantikan Jenis Aktivitas) -->
           <div class="flex flex-col sm:flex-row sm:items-center">
             <label class="w-full sm:w-44 text-sm font-bold text-amber-700 mb-1 sm:mb-0">
-              Jenis Aktivitas
+              Provinsi
             </label>
             <select 
-              v-model="filters.id_jenis"
+              v-model="filters.id_provinsi"
               class="flex-1 bg-white border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-700"
             >
-              <option value="">-- Semua Jenis Aktivitas --</option>
+              <option value="">-- Semua Provinsi --</option>
               <option 
-                v-for="item in (jenisData?.data || [])" 
-                :key="item.id_jenis" 
-                :value="item.id_jenis"
+                v-for="item in (provinsiData?.data || [])" 
+                :key="item.value" 
+                :value="item.value"
               >
-                {{ item.nama_jenis || item.jenis_lomba }}
+                {{ item.name }}
               </option>
             </select>
           </div>
 
-          <!-- Status Validasi -->
+          <!-- 4. Status Valid -->
           <div class="flex flex-col sm:flex-row sm:items-center">
             <label class="w-full sm:w-44 text-sm font-bold text-amber-700 mb-1 sm:mb-0">
               Status Valid
@@ -295,7 +299,7 @@ const formatDate = (dateStr) => {
               class="flex-1 bg-white border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 font-semibold text-gray-800"
             >
               <option value="">-- Semua Status --</option>
-              <option value="PENDING">Belum Divalidasi (Pending)</option>
+              <option value="PENDING">Belum Divalidasi</option>
               <option value="APPROVED">Valid (Disetujui)</option>
               <option value="REJECTED">Tidak Valid (Ditolak)</option>
             </select>
@@ -325,7 +329,7 @@ const formatDate = (dateStr) => {
               type="text" 
               v-model="searchInput"
               @keyup.enter="handleSearch"
-              placeholder="Cari Aktivitas dan Prestasi..." 
+              placeholder="Cari Nama Aktivitas / Penyelenggara..." 
               class="w-full border border-gray-300 rounded-l px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500"
             />
             <button 
@@ -351,7 +355,7 @@ const formatDate = (dateStr) => {
           </div>
         </div>
 
-        <!-- Right: Action Buttons (Hijau Tambah, Merah Hapus, Orange Aksi) -->
+        <!-- Right: Action Buttons -->
         <div class="flex items-center gap-2">
           <button 
             type="button"
@@ -384,7 +388,7 @@ const formatDate = (dateStr) => {
               <th class="p-3 min-w-[280px] border-r border-[#003c5e]">Nama Aktivitas</th>
               <th class="p-3 min-w-[120px] text-center border-r border-[#003c5e]">Tanggal</th>
               <th class="p-3 min-w-[90px] text-center border-r border-[#003c5e]">Biaya</th>
-              <th class="p-3 min-w-[130px] text-center border-r border-[#003c5e]">Valid</th>
+              <th class="p-3 min-w-[130px] text-center border-r border-[#003c5e]">Status Valid</th>
               <th class="p-3 w-28 text-center">Aksi</th>
             </tr>
           </thead>
@@ -404,7 +408,7 @@ const formatDate = (dateStr) => {
               <td colspan="8" class="text-center py-10 text-gray-500">
                 <div class="py-6">
                   <p class="text-base font-semibold text-gray-600">Tidak ada data aktivitas yang sesuai dengan filter.</p>
-                  <p class="text-xs text-gray-400 mt-1">Coba sesuaikan kata kunci pencarian atau reset filter.</p>
+                  <p class="text-xs text-gray-400 mt-1">Coba sesuaikan pilihan filter di atas atau reset filter.</p>
                 </div>
               </td>
             </tr>
@@ -446,20 +450,23 @@ const formatDate = (dateStr) => {
                 <div class="font-medium text-gray-900 leading-snug">
                   {{ item.nama_lomba }}
                 </div>
-                <div class="text-xs text-gray-500 mt-1 flex flex-wrap items-center gap-2">
+                <div class="text-xs text-gray-500 mt-1.5 flex flex-wrap items-center gap-1.5">
                   <span v-if="item.kategori_lomba" class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[11px]">
                     {{ item.kategori_lomba }}
                   </span>
                   <span v-if="item.tingkat_pendidikan" class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[11px]">
                     {{ item.tingkat_pendidikan }}
                   </span>
+                  <span v-if="item.nama_provinsi" class="bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded text-[11px] font-medium">
+                    📍 {{ item.nama_provinsi }}
+                  </span>
                   <span v-if="item.format_lomba" class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-[11px]">
                     {{ item.format_lomba }}
                   </span>
                 </div>
                 <!-- Catatan Penolakan jika ada -->
-                <div v-if="item.alasan_penolakan" class="mt-1 text-xs text-red-600 bg-red-50 p-1.5 rounded border border-red-200">
-                  <span class="font-bold">Catatan:</span> {{ item.alasan_penolakan }}
+                <div v-if="item.alasan_penolakan" class="mt-1.5 text-xs text-red-600 bg-red-50 p-1.5 rounded border border-red-200">
+                  <span class="font-bold">Alasan Penolakan:</span> {{ item.alasan_penolakan }}
                 </div>
               </td>
 
@@ -469,8 +476,8 @@ const formatDate = (dateStr) => {
               </td>
 
               <!-- Biaya -->
-              <td class="p-3 text-center text-xs font-semibold border-r border-gray-200">
-                <span v-if="!item.harga || item.harga == 0" class="text-emerald-600">Gratis</span>
+              <td class="p-3 text-center text-xs font-semibold border-r border-gray-200 whitespace-nowrap">
+                <span v-if="!item.harga || item.harga == 0" class="text-emerald-600 font-bold">Gratis</span>
                 <span v-else class="text-gray-800">Rp {{ Number(item.harga).toLocaleString('id-ID') }}</span>
               </td>
 
@@ -490,7 +497,7 @@ const formatDate = (dateStr) => {
                 </div>
               </td>
 
-              <!-- Aksi Buttons (Sesuai icon di screenshot: Eye Biru, Trash Merah + Action approve) -->
+              <!-- Aksi Buttons -->
               <td class="p-3 text-center">
                 <div class="flex items-center justify-center gap-1">
                   <!-- Tombol Detail (Eye Biru Muda) -->
@@ -514,7 +521,7 @@ const formatDate = (dateStr) => {
                     <font-awesome-icon icon="check" class="w-3.5 h-3.5" />
                   </button>
 
-                  <!-- Tombol Cepat Tolak (Orange/Kuning) jika PENDING -->
+                  <!-- Tombol Cepat Tolak (Oranye) jika PENDING -->
                   <button 
                     v-if="item.status_lomba === 'PENDING'"
                     type="button"
@@ -541,7 +548,7 @@ const formatDate = (dateStr) => {
         </table>
       </div>
 
-      <!-- Footer Pagination Sesuai Standar -->
+      <!-- Footer Pagination -->
       <div class="p-4 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-600">
         <div>
           Menampilkan 
